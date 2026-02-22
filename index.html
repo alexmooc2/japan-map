@@ -97,15 +97,20 @@
     .iw-row b { color: #111; }
     .iw-btns {
       display: flex;
-      gap: 8px;
+      flex-direction: column;
+      gap: 7px;
       margin-top: 12px;
+    }
+    .iw-btns-row {
+      display: flex;
+      gap: 7px;
     }
     .iw-btn {
       flex: 1;
       padding: 9px 6px;
       border: none;
       border-radius: 10px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       cursor: pointer;
       text-align: center;
@@ -113,7 +118,8 @@
       display: block;
       line-height: 1;
     }
-    .iw-btn-maps { background: #1a73e8; color: white; }
+    .iw-btn-gmaps  { background: #1a73e8; color: white; }
+    .iw-btn-amaps  { background: #000; color: white; }
     .iw-btn-source { background: #f1f3f4; color: #333; }
   </style>
 </head>
@@ -151,7 +157,7 @@
     "price_range": "",
     "notes": "",
     "uploader": "gabbbyle",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJ7wKLka4IAWARCByidG5EGrY",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Kyoto%20Station&query_place_id=ChIJ7wKLka4IAWARCByidG5EGrY",
     "source_url": "https://www.tiktok.com/@gabbbyle/video/7589188920894704926?_r=1&_t=ZT-947fO5bnM8T",
     "lat": 34.985849,
     "lng": 135.7587667
@@ -166,7 +172,7 @@
     "price_range": "$",
     "notes": "Accessible via vintage train from Kyoto Station",
     "uploader": "gabbbyle",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJwQyneMU3AWARIiZJubDZ_ko",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Nara&query_place_id=ChIJwQyneMU3AWARIiZJubDZ_ko",
     "source_url": "https://www.tiktok.com/@gabbbyle/video/7589188920894704926?_r=1&_t=ZT-947fO5bnM8T",
     "lat": 34.685109,
     "lng": 135.8048019
@@ -211,7 +217,7 @@
     "price_range": "",
     "notes": "",
     "uploader": "gabbbyle",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJrYtcv-urAWAR3XzWvXv8n_s",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Arashiyama%20Bamboo%20Forest&query_place_id=ChIJrYtcv-urAWAR3XzWvXv8n_s",
     "source_url": "https://www.tiktok.com/@gabbbyle/video/7589188920894704926?_r=1&_t=ZT-947fO5bnM8T",
     "lat": 35.0168187,
     "lng": 135.6713013
@@ -232,6 +238,21 @@
     "lng": 135.666773
   },
   {
+    "name": "Myokura Kyoto",
+    "category": "Hotel",
+    "city": "Kyoto",
+    "area": "Kyoto Station",
+    "what_to_do": "Stay overnight",
+    "best_for": "Convenient location near station",
+    "price_range": "",
+    "notes": "Located right by Kyoto Station",
+    "uploader": "gabbbyle",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=MIMARU%20KYOTO%20STATION&query_place_id=ChIJSa6Rd7IIAWAR0VNhyWD2uMw",
+    "source_url": "https://www.tiktok.com/@gabbbyle/video/7589188920894704926?_r=1&_t=ZT-947fO5bnM8T",
+    "lat": 34.9829717,
+    "lng": 135.7618725
+  },
+  {
     "name": "Hakone",
     "category": "Day Trip Destination",
     "city": "Hakone",
@@ -241,7 +262,7 @@
     "price_range": "",
     "notes": "Accessible by Shinkansen from Kyoto",
     "uploader": "gabbbyle",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJe9yyYAyiGWARJnuXrBe9BSY",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Hakone&query_place_id=ChIJe9yyYAyiGWARJnuXrBe9BSY",
     "source_url": "https://www.tiktok.com/@gabbbyle/video/7589188920894704926?_r=1&_t=ZT-947fO5bnM8T",
     "lat": 35.2337691,
     "lng": 139.1088454
@@ -256,7 +277,7 @@
     "price_range": "$$",
     "notes": "",
     "uploader": "",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJ2YfF7RTnAGARvwILJIgrP7c",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Kushikatsu%20Daruma%20-%20Dotombori&query_place_id=ChIJ2YfF7RTnAGARvwILJIgrP7c",
     "source_url": "https://www.instagram.com/p/DRvpfchknVD/?igsh=NTc4MTIwNjQ2YQ==",
     "lat": 34.6688351,
     "lng": 135.502638
@@ -271,7 +292,7 @@
     "price_range": "",
     "notes": "",
     "uploader": "",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJbyd0kIjmAGAR_crecCbjwlc",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Umeda%20Sky%20Building&query_place_id=ChIJbyd0kIjmAGAR_crecCbjwlc",
     "source_url": "https://www.instagram.com/p/DRvpfchknVD/?igsh=NTc4MTIwNjQ2YQ==",
     "lat": 34.7052872,
     "lng": 135.4896527
@@ -286,7 +307,7 @@
     "price_range": "$$",
     "notes": "",
     "uploader": "",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJVQPrz5HmAGAR-eFwrHI8hLs",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Isaribi&query_place_id=ChIJVQPrz5HmAGAR-eFwrHI8hLs",
     "source_url": "https://www.instagram.com/p/DRvpfchknVD/?igsh=NTc4MTIwNjQ2YQ==",
     "lat": 34.7064892,
     "lng": 135.4977256
@@ -301,7 +322,7 @@
     "price_range": "",
     "notes": "",
     "uploader": "",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJGyLAvWrnAGARgV8FAkqNJfk",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=neel%20nakazakicho&query_place_id=ChIJGyLAvWrnAGARgV8FAkqNJfk",
     "source_url": "https://www.instagram.com/p/DRvpfchknVD/?igsh=NTc4MTIwNjQ2YQ==",
     "lat": 34.7087745,
     "lng": 135.5034573
@@ -331,7 +352,7 @@
     "price_range": "",
     "notes": "",
     "uploader": "",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJzUwQeZbmAGARoYXgxwJkjdA",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Salon%20de%20AManTo&query_place_id=ChIJzUwQeZbmAGARoYXgxwJkjdA",
     "source_url": "https://www.instagram.com/p/DRvpfchknVD/?igsh=NTc4MTIwNjQ2YQ==",
     "lat": 34.7080705,
     "lng": 135.5043988
@@ -346,7 +367,7 @@
     "price_range": "",
     "notes": "",
     "uploader": "",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJZek-cVAcAWARVFe0gnysw1E",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Tsutaya%20Books%20Hirakata&query_place_id=ChIJZek-cVAcAWARVFe0gnysw1E",
     "source_url": "https://www.instagram.com/p/DRvpfchknVD/?igsh=NTc4MTIwNjQ2YQ==",
     "lat": 34.81606,
     "lng": 135.64957
@@ -361,7 +382,7 @@
     "price_range": "",
     "notes": "",
     "uploader": "fujirin",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJ_TooXM3gAGARQR6hXH3QAQ8",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Osaka%20Castle&query_place_id=ChIJ_TooXM3gAGARQR6hXH3QAQ8",
     "source_url": "https://www.reddit.com/r/JapanTravelTips/comments/1fph5j5/what_is_a_must_do_in_osaka/loxwohu/",
     "lat": 34.6872571,
     "lng": 135.5258546
@@ -376,7 +397,7 @@
     "price_range": "",
     "notes": "",
     "uploader": "fujirin",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJg2DcJhXnAGARCbeAHoZrPeQ",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Dotonbori&query_place_id=ChIJg2DcJhXnAGARCbeAHoZrPeQ",
     "source_url": "https://www.reddit.com/r/JapanTravelTips/comments/1fph5j5/what_is_a_must_do_in_osaka/loxwohu/",
     "lat": 34.6686471,
     "lng": 135.5030983
@@ -391,7 +412,7 @@
     "price_range": "",
     "notes": "",
     "uploader": "fujirin",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJXeLVg9DgAGARqlIyMCX-BTY",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Universal%20Studios%20Japan&query_place_id=ChIJXeLVg9DgAGARqlIyMCX-BTY",
     "source_url": "https://www.reddit.com/r/JapanTravelTips/comments/1fph5j5/what_is_a_must_do_in_osaka/loxwohu/",
     "lat": 34.6656768,
     "lng": 135.4323185
@@ -406,7 +427,7 @@
     "price_range": "",
     "notes": "",
     "uploader": "fujirin",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJbyd0kIjmAGAR_crecCbjwlc",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Umeda%20Sky%20Building&query_place_id=ChIJbyd0kIjmAGAR_crecCbjwlc",
     "source_url": "https://www.reddit.com/r/JapanTravelTips/comments/1fph5j5/what_is_a_must_do_in_osaka/loxwohu/",
     "lat": 34.7052872,
     "lng": 135.4896527
@@ -436,7 +457,7 @@
     "price_range": "",
     "notes": "",
     "uploader": "fujirin",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJed3mI_DdAGARJyFcpACSbwc",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Abeno%20Harukas&query_place_id=ChIJed3mI_DdAGARJyFcpACSbwc",
     "source_url": "https://www.reddit.com/r/JapanTravelTips/comments/1fph5j5/what_is_a_must_do_in_osaka/loxwohu/",
     "lat": 34.6460706,
     "lng": 135.5134771
@@ -451,7 +472,7 @@
     "price_range": "",
     "notes": "",
     "uploader": "fujirin",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJ97lN2RDnAGARxxH5he8b6KQ",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Pok%C3%A9mon%20Cafe%20Osaka%20Shinsaibashi&query_place_id=ChIJ97lN2RDnAGARxxH5he8b6KQ",
     "source_url": "https://www.reddit.com/r/JapanTravelTips/comments/1fph5j5/what_is_a_must_do_in_osaka/loxwohu/",
     "lat": 34.6733012,
     "lng": 135.5007844
@@ -466,7 +487,7 @@
     "price_range": "",
     "notes": "Nice foliage in early December",
     "uploader": "fujirin",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJE8YKbYz5AGARoCiDnK6410w",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Minoh%20Falls&query_place_id=ChIJE8YKbYz5AGARoCiDnK6410w",
     "source_url": "https://www.reddit.com/r/JapanTravelTips/comments/1fph5j5/what_is_a_must_do_in_osaka/loxwohu/",
     "lat": 34.8538281,
     "lng": 135.4719911
@@ -481,7 +502,7 @@
     "price_range": "",
     "notes": "",
     "uploader": "fujirin",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJzakNjPToAGARzCwIriDFg28",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Osaka%20Aquarium%20Kaiyukan&query_place_id=ChIJzakNjPToAGARzCwIriDFg28",
     "source_url": "https://www.reddit.com/r/JapanTravelTips/comments/1fph5j5/what_is_a_must_do_in_osaka/loxwohu/",
     "lat": 34.6545182,
     "lng": 135.4289645
@@ -496,7 +517,7 @@
     "price_range": "",
     "notes": "Described as a smaller version of Akihabara",
     "uploader": "fujirin",
-    "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJv6w_-2fnAGARH2p9wbwos3c",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Nipponbashi%20Denden%20Town&query_place_id=ChIJv6w_-2fnAGARH2p9wbwos3c",
     "source_url": "https://www.reddit.com/r/JapanTravelTips/comments/1fph5j5/what_is_a_must_do_in_osaka/loxwohu/",
     "lat": 34.6604299,
     "lng": 135.5058817
@@ -585,8 +606,16 @@
     if (p.notes)       h += `<div class="iw-row"><b>Notes:</b> ${esc(p.notes)}</div>`;
     if (p.uploader)    h += `<div class="iw-row"><b>Via:</b> @${esc(p.uploader)}</div>`;
     h += '<div class="iw-btns">';
-    if (p.maps_url)   h += `<a href="${p.maps_url}" target="_blank" class="iw-btn iw-btn-maps">📍 Google Maps</a>`;
-    if (p.source_url) h += `<a href="${p.source_url}" target="_blank" class="iw-btn iw-btn-source">📱 Source</a>`;
+    // Row 1: Google Maps + Apple Maps side by side
+    h += '<div class="iw-btns-row">';
+    if (p.maps_url) h += `<a href="${p.maps_url}" target="_blank" class="iw-btn iw-btn-gmaps">📍 Google Maps</a>`;
+    if (p.lat && p.lng) {
+      const appleUrl = `https://maps.apple.com/?q=${encodeURIComponent(p.name)}&ll=${p.lat},${p.lng}`;
+      h += `<a href="${appleUrl}" target="_blank" class="iw-btn iw-btn-amaps">🍎 Apple Maps</a>`;
+    }
+    h += '</div>';
+    // Row 2: Source link
+    if (p.source_url) h += `<a href="${p.source_url}" target="_blank" class="iw-btn iw-btn-source">📱 View source post</a>`;
     h += '</div></div>';
     return h;
   }
@@ -632,7 +661,7 @@
   </script>
 
   <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkPFp6QmxTKsdpYj1607MO8lvf8YrlZOs&callback=initMap&loading=async"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxalv-tE2G_coEPcLLCiD6S4I9A7b_RSc&callback=initMap&loading=async"
     async defer>
   </script>
 </body>
