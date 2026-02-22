@@ -134,6 +134,7 @@
   const PLACES = [
   {
     "name": "Convenience Store (Kyoto)",
+    "type": "Shop",
     "category": "Convenience Store",
     "city": "Kyoto",
     "area": "",
@@ -149,6 +150,7 @@
   },
   {
     "name": "Kyoto Station",
+    "type": "Attraction",
     "category": "Train Station",
     "city": "Kyoto",
     "area": "",
@@ -164,6 +166,7 @@
   },
   {
     "name": "Nara",
+    "type": "Attraction",
     "category": "Day Trip Destination",
     "city": "Nara",
     "area": "",
@@ -179,6 +182,7 @@
   },
   {
     "name": "Uji",
+    "type": "Neighborhood",
     "category": "Day Trip Destination",
     "city": "Uji",
     "area": "",
@@ -194,6 +198,7 @@
   },
   {
     "name": "Fushimi Inari Taisha",
+    "type": "Attraction",
     "category": "Shrine",
     "city": "Kyoto",
     "area": "Fushimi",
@@ -209,6 +214,7 @@
   },
   {
     "name": "Arashiyama Bamboo Grove",
+    "type": "Attraction",
     "category": "Natural Attraction",
     "city": "Kyoto",
     "area": "Arashiyama",
@@ -224,6 +230,7 @@
   },
   {
     "name": "Arashiyama",
+    "type": "Neighborhood",
     "category": "District",
     "city": "Kyoto",
     "area": "Arashiyama",
@@ -239,6 +246,7 @@
   },
   {
     "name": "Myokura Kyoto",
+    "type": "Hotel",
     "category": "Hotel",
     "city": "Kyoto",
     "area": "Kyoto Station",
@@ -254,6 +262,7 @@
   },
   {
     "name": "Hakone",
+    "type": "Attraction",
     "category": "Day Trip Destination",
     "city": "Hakone",
     "area": "",
@@ -269,6 +278,7 @@
   },
   {
     "name": "Kushikatsu Daruma",
+    "type": "Restaurant",
     "category": "Kushikatsu",
     "city": "Osaka",
     "area": "Dotonbori",
@@ -284,6 +294,7 @@
   },
   {
     "name": "Umeda Sky Building",
+    "type": "Attraction",
     "category": "Observation Deck",
     "city": "Osaka",
     "area": "Umeda",
@@ -299,6 +310,7 @@
   },
   {
     "name": "Isaribi",
+    "type": "Restaurant",
     "category": "Robatayaki",
     "city": "Osaka",
     "area": "",
@@ -314,6 +326,7 @@
   },
   {
     "name": "neel",
+    "type": "Cafe",
     "category": "Cafe",
     "city": "Osaka",
     "area": "Nakazakicho",
@@ -329,6 +342,7 @@
   },
   {
     "name": "Universal Studios Japan",
+    "type": "Attraction",
     "category": "Theme Park",
     "city": "Osaka",
     "area": "",
@@ -344,6 +358,7 @@
   },
   {
     "name": "Salon de AManTo",
+    "type": "Cafe",
     "category": "Cafe",
     "city": "Osaka",
     "area": "",
@@ -359,6 +374,7 @@
   },
   {
     "name": "Tsutaya Books Hirakata",
+    "type": "Shop",
     "category": "Bookstore",
     "city": "Osaka",
     "area": "Hirakata",
@@ -374,6 +390,7 @@
   },
   {
     "name": "Osaka Castle",
+    "type": "Attraction",
     "category": "Castle",
     "city": "Osaka",
     "area": "",
@@ -389,6 +406,7 @@
   },
   {
     "name": "Dotonbori River",
+    "type": "Attraction",
     "category": "Landmark",
     "city": "Osaka",
     "area": "Dotonbori",
@@ -404,6 +422,7 @@
   },
   {
     "name": "Universal Studios Japan",
+    "type": "Attraction",
     "category": "Theme Park",
     "city": "Osaka",
     "area": "",
@@ -419,6 +438,7 @@
   },
   {
     "name": "Umeda Sky Building",
+    "type": "Attraction",
     "category": "Observation Deck",
     "city": "Osaka",
     "area": "Umeda",
@@ -434,6 +454,7 @@
   },
   {
     "name": "Grand Green Osaka Park",
+    "type": "Attraction",
     "category": "Park",
     "city": "Osaka",
     "area": "Umeda",
@@ -449,6 +470,7 @@
   },
   {
     "name": "Abeno Harukas",
+    "type": "Attraction",
     "category": "Skyscraper",
     "city": "Osaka",
     "area": "Abeno",
@@ -464,6 +486,7 @@
   },
   {
     "name": "Pokémon Café Osaka",
+    "type": "Cafe",
     "category": "Themed Cafe",
     "city": "Osaka",
     "area": "",
@@ -479,6 +502,7 @@
   },
   {
     "name": "Minoh Waterfall",
+    "type": "Attraction",
     "category": "Waterfall",
     "city": "Osaka",
     "area": "Minoh",
@@ -494,6 +518,7 @@
   },
   {
     "name": "Kaiyukan Aquarium",
+    "type": "Attraction",
     "category": "Aquarium",
     "city": "Osaka",
     "area": "",
@@ -509,6 +534,7 @@
   },
   {
     "name": "Denden Town",
+    "type": "Neighborhood",
     "category": "Electronics District",
     "city": "Osaka",
     "area": "Nipponbashi",
@@ -524,18 +550,36 @@
   }
 ];
 
-  // City colour palette
-  const CITY_COLORS = {
-    'Osaka':  '#e8453c',
-    'Kyoto':  '#9c27b0',
-    'Tokyo':  '#1a73e8',
-    'Nara':   '#2e7d32',
-    'Hakone': '#f57c00',
-    'Uji':    '#00838f',
+  // Category colour palette — keyed on the broad Type field
+  const TYPE_COLORS = {
+    'Restaurant':  '#e8453c',  // red
+    'Cafe':        '#795548',  // brown
+    'Bar':         '#7b1fa2',  // purple
+    'Shop':        '#00897b',  // teal
+    'Market':      '#43a047',  // green
+    'Attraction':  '#1e88e5',  // blue
+    'Hotel':       '#3949ab',  // indigo
+    'Service':     '#fb8c00',  // orange
+    'Neighborhood':'#546e7a',  // blue-grey
+    'Other':       '#78909c',  // grey
   };
-  function cityColor(city) {
-    return CITY_COLORS[city] || '#607d8b';
+  function typeColor(type) {
+    return TYPE_COLORS[type] || '#78909c';
   }
+
+  // Legend labels for the info window subtitle
+  const TYPE_ICONS = {
+    'Restaurant':  '🍽️',
+    'Cafe':        '☕',
+    'Bar':         '🍸',
+    'Shop':        '🛍️',
+    'Market':      '🏪',
+    'Attraction':  '🏛️',
+    'Hotel':       '🏨',
+    'Service':     '🔧',
+    'Neighborhood':'📍',
+    'Other':       '📌',
+  };
 
   let map, infoWindow, markers = [];
 
@@ -565,7 +609,7 @@
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
           scale: 10,
-          fillColor: cityColor(p.city),
+          fillColor: typeColor(p.type),
           fillOpacity: 1,
           strokeColor: 'white',
           strokeWeight: 2.5,
@@ -594,19 +638,37 @@
     fitVisible();
   }
 
+  function getPlatform(url) {
+    if (!url) return null;
+    if (url.includes('tiktok.com'))    return { name: 'TikTok',    icon: '🎵', color: '#010101' };
+    if (url.includes('instagram.com')) return { name: 'Instagram', icon: '📸', color: '#e1306c' };
+    if (url.includes('reddit.com'))    return { name: 'Reddit',    icon: '🤖', color: '#ff4500' };
+    if (url.includes('youtube.com') || url.includes('youtu.be'))
+                                       return { name: 'YouTube',   icon: '▶️', color: '#ff0000' };
+    return { name: 'Web', icon: '🌐', color: '#607d8b' };
+  }
+
   function buildInfoHTML(p) {
     const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    const platform = getPlatform(p.source_url);
     let h = '<div class="iw">';
     h += `<div class="iw-name">${esc(p.name)}</div>`;
+    const typeIcon = TYPE_ICONS[p.type] || '📌';
     const sub = [p.category, p.city, p.area].filter(Boolean).join(' · ');
-    if (sub) h += `<div class="iw-sub">${esc(sub)}</div>`;
+    if (sub) h += `<div class="iw-sub">${typeIcon} ${esc(sub)}</div>`;
+    else if (p.type) h += `<div class="iw-sub">${typeIcon} ${esc(p.type)}</div>`;
     if (p.what_to_do)  h += `<div class="iw-row"><b>What to try:</b> ${esc(p.what_to_do)}</div>`;
     if (p.best_for)    h += `<div class="iw-row"><b>Best for:</b> ${esc(p.best_for)}</div>`;
     if (p.price_range) h += `<div class="iw-row"><b>Price:</b> ${esc(p.price_range)}</div>`;
     if (p.notes)       h += `<div class="iw-row"><b>Notes:</b> ${esc(p.notes)}</div>`;
-    if (p.uploader)    h += `<div class="iw-row"><b>Via:</b> @${esc(p.uploader)}</div>`;
+    if (platform && p.uploader)
+      h += `<div class="iw-row"><b>Via:</b> ${platform.icon} ${platform.name} · @${esc(p.uploader)}</div>`;
+    else if (platform)
+      h += `<div class="iw-row"><b>Via:</b> ${platform.icon} ${platform.name}</div>`;
+    else if (p.uploader)
+      h += `<div class="iw-row"><b>Via:</b> @${esc(p.uploader)}</div>`;
     h += '<div class="iw-btns">';
-    // Row 1: Google Maps + Apple Maps side by side
+    // Row 1: Google Maps + Apple Maps
     h += '<div class="iw-btns-row">';
     if (p.maps_url) h += `<a href="${p.maps_url}" target="_blank" class="iw-btn iw-btn-gmaps">📍 Google Maps</a>`;
     if (p.lat && p.lng) {
@@ -614,8 +676,11 @@
       h += `<a href="${appleUrl}" target="_blank" class="iw-btn iw-btn-amaps">🍎 Apple Maps</a>`;
     }
     h += '</div>';
-    // Row 2: Source link
-    if (p.source_url) h += `<a href="${p.source_url}" target="_blank" class="iw-btn iw-btn-source">📱 View source post</a>`;
+    // Row 2: Source button labelled with platform name
+    if (p.source_url && platform)
+      h += `<a href="${p.source_url}" target="_blank" class="iw-btn iw-btn-source" style="background:${platform.color};color:white">${platform.icon} View on ${platform.name}</a>`;
+    else if (p.source_url)
+      h += `<a href="${p.source_url}" target="_blank" class="iw-btn iw-btn-source">📱 View source post</a>`;
     h += '</div></div>';
     return h;
   }
