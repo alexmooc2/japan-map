@@ -50,11 +50,10 @@
       color: white;
     }
 
-    /* ── My location button ── */
-    #locate-btn {
+    /* ── FAB buttons (locate + list) ── */
+    .fab {
       position: fixed;
       bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
-      right: 16px;
       z-index: 100;
       width: 52px;
       height: 52px;
@@ -62,11 +61,181 @@
       border: none;
       background: white;
       box-shadow: 0 2px 16px rgba(0,0,0,0.22);
-      font-size: 24px;
+      font-size: 22px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    #locate-btn { right: 16px; }
+    #list-btn   { right: 76px; }
+
+    /* ── List view overlay ── */
+    #list-view {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: #f2f2f7;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: translateY(100%);
+      transition: transform 0.32s cubic-bezier(0.32,0.72,0,1);
+    }
+    #list-view.open { transform: translateY(0); }
+
+    /* Header */
+    #lv-header {
+      background: white;
+      padding: calc(env(safe-area-inset-top, 14px) + 10px) 16px 0;
+      border-bottom: 1px solid #e5e5ea;
+      flex-shrink: 0;
+    }
+    #lv-titlerow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 10px;
+    }
+    #lv-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #111;
+    }
+    #lv-count {
+      font-size: 13px;
+      color: #888;
+      font-weight: 400;
+    }
+    #lv-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: #e5e5ea;
+      font-size: 17px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+      flex-shrink: 0;
+    }
+
+    /* Filter chip rows */
+    .lv-filter-row {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 8px 0 10px;
+      scrollbar-width: none;
+    }
+    .lv-filter-row::-webkit-scrollbar { display: none; }
+    .lv-chip {
+      padding: 5px 13px;
+      border-radius: 16px;
+      border: 1.5px solid #ddd;
+      background: white;
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      color: #444;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .lv-chip.active {
+      background: #1a73e8;
+      color: white;
+      border-color: #1a73e8;
+    }
+
+    /* Cards list */
+    #lv-list {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 12px 14px calc(env(safe-area-inset-bottom, 0px) + 20px);
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    /* Card */
+    .lv-card {
+      background: white;
+      border-radius: 14px;
+      padding: 14px 14px 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+    }
+    .lv-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111;
+      line-height: 1.2;
+      margin-bottom: 2px;
+    }
+    .lv-sub {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 9px;
+    }
+    .lv-quote {
+      font-size: 13px;
+      font-style: italic;
+      color: #444;
+      background: #f8f8f8;
+      border-left: 3px solid #1a73e8;
+      padding: 6px 10px;
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .lv-row {
+      font-size: 13px;
+      color: #333;
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+    .lv-row b { color: #111; }
+    .lv-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 11px;
+    }
+    .lv-btns-row { display: flex; gap: 6px; }
+    .lv-btn {
+      flex: 1;
+      padding: 9px 6px;
+      border: none;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      line-height: 1;
+    }
+    .lv-btn-map    { background: #1a73e8; color: white; }
+    .lv-btn-apple  { background: #000;    color: white; }
+    .lv-btn-source { background: #f1f3f4; color: #333; }
+    .lv-btn-pin    { background: #f1f3f4; color: #333; }
+    .lv-photo {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-top: 11px;
+      display: block;
+      background: #f0f0f0;
+    }
+    .lv-no-results {
+      text-align: center;
+      color: #999;
+      font-size: 15px;
+      padding: 48px 0;
     }
 
     /* ── Info window ── */
@@ -152,7 +321,24 @@
     <button class="filter-btn active" onclick="filterCity('all')">All</button>
   </div>
   <div id="map"></div>
-  <button id="locate-btn" onclick="locateMe()" title="My location">📍</button>
+  <button class="fab" id="locate-btn" onclick="locateMe()" title="My location">📍</button>
+  <button class="fab" id="list-btn"   onclick="toggleListView()" title="List view">☰</button>
+
+  <!-- ── List view overlay ── -->
+  <div id="list-view">
+    <div id="lv-header">
+      <div id="lv-titlerow">
+        <span>
+          <span id="lv-title">All Places</span>&nbsp;
+          <span id="lv-count"></span>
+        </span>
+        <button id="lv-close" onclick="toggleListView()">✕</button>
+      </div>
+      <div class="lv-filter-row" id="lv-city-row"></div>
+      <div class="lv-filter-row" id="lv-type-row"></div>
+    </div>
+    <div id="lv-list"></div>
+  </div>
 
   <script>
   const PLACES = [
@@ -2404,6 +2590,7 @@
   };
 
   let map, infoWindow, markers = [];
+  const markerByName = {};   // name → marker, for list-view "show on map"
 
   function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -2419,10 +2606,12 @@
     infoWindow = new google.maps.InfoWindow({ maxWidth: 320 });
 
     const cities = new Set();
+    const types  = new Set();
 
     PLACES.forEach(p => {
       if (!p.lat || !p.lng) return;
       if (p.city) cities.add(p.city);
+      if (p.type) types.add(p.type);
 
       const marker = new google.maps.Marker({
         position: { lat: p.lat, lng: p.lng },
@@ -2439,14 +2628,16 @@
       });
 
       marker._city = p.city;
+      marker._type = p.type;
       marker.addListener('click', () => {
         infoWindow.setContent(buildInfoHTML(p));
         infoWindow.open(map, marker);
       });
       markers.push(marker);
+      markerByName[p.name] = marker;
     });
 
-    // City filter buttons
+    // Map city filter buttons
     const bar = document.getElementById('filters');
     [...cities].sort().forEach(city => {
       const btn = document.createElement('button');
@@ -2456,8 +2647,157 @@
       bar.appendChild(btn);
     });
 
+    // List view city chips
+    const cityRow = document.getElementById('lv-city-row');
+    const allCityChip = document.createElement('button');
+    allCityChip.className = 'lv-chip lv-city-chip active';
+    allCityChip.textContent = 'All Cities';
+    allCityChip.dataset.val = 'all';
+    allCityChip.onclick = () => setLvCity('all');
+    cityRow.appendChild(allCityChip);
+    [...cities].sort().forEach(city => {
+      const chip = document.createElement('button');
+      chip.className = 'lv-chip lv-city-chip';
+      chip.textContent = city;
+      chip.dataset.val = city;
+      chip.onclick = () => setLvCity(city);
+      cityRow.appendChild(chip);
+    });
+
+    // List view type chips
+    const typeRow = document.getElementById('lv-type-row');
+    const allTypeChip = document.createElement('button');
+    allTypeChip.className = 'lv-chip lv-type-chip active';
+    allTypeChip.textContent = 'All Types';
+    allTypeChip.dataset.val = 'all';
+    allTypeChip.onclick = () => setLvType('all');
+    typeRow.appendChild(allTypeChip);
+    const typeOrder = ['Restaurant','Cafe','Bar','Shop','Market','Attraction','Hotel','Neighborhood','Service','Other'];
+    const sortedTypes = [...types].sort((a,b) => {
+      const ai = typeOrder.indexOf(a), bi = typeOrder.indexOf(b);
+      if (ai === -1 && bi === -1) return a.localeCompare(b);
+      if (ai === -1) return 1;
+      if (bi === -1) return -1;
+      return ai - bi;
+    });
+    sortedTypes.forEach(type => {
+      const chip = document.createElement('button');
+      chip.className = 'lv-chip lv-type-chip';
+      chip.textContent = (TYPE_ICONS[type] || '') + ' ' + type;
+      chip.dataset.val = type;
+      chip.onclick = () => setLvType(type);
+      typeRow.appendChild(chip);
+    });
+
     // Fit to all markers
     fitVisible();
+  }
+
+  // ── List view state ────────────────────────────────────────
+  let lvCity = 'all', lvType = 'all';
+
+  function toggleListView() {
+    const lv = document.getElementById('list-view');
+    const opening = !lv.classList.contains('open');
+    lv.classList.toggle('open');
+    if (opening) renderList();
+  }
+
+  function setLvCity(city) {
+    lvCity = city;
+    document.querySelectorAll('.lv-city-chip').forEach(c =>
+      c.classList.toggle('active', c.dataset.val === city));
+    renderList();
+  }
+
+  function setLvType(type) {
+    lvType = type;
+    document.querySelectorAll('.lv-type-chip').forEach(c =>
+      c.classList.toggle('active', c.dataset.val === type));
+    renderList();
+  }
+
+  function renderList() {
+    const filtered = PLACES.filter(p => {
+      if (!p.lat || !p.lng) return false;
+      if (lvCity !== 'all' && p.city !== lvCity) return false;
+      if (lvType !== 'all' && p.type !== lvType) return false;
+      return true;
+    });
+
+    document.getElementById('lv-count').textContent =
+      filtered.length + ' place' + (filtered.length === 1 ? '' : 's');
+
+    const list = document.getElementById('lv-list');
+    if (filtered.length === 0) {
+      list.innerHTML = '<div class="lv-no-results">No places match these filters</div>';
+      return;
+    }
+    list.innerHTML = filtered.map(p => buildCardHTML(p)).join('');
+  }
+
+  function buildCardHTML(p) {
+    const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    const platform = getPlatform(p.source_url);
+    const typeIcon = TYPE_ICONS[p.type] || '📌';
+    const sub = [p.category, p.city, p.area].filter(Boolean).join(' · ');
+
+    let h = '<div class="lv-card">';
+    h += `<div class="lv-name">${esc(p.name)}</div>`;
+    if (sub)    h += `<div class="lv-sub">${typeIcon} ${esc(sub)}</div>`;
+    else if (p.type) h += `<div class="lv-sub">${typeIcon} ${esc(p.type)}</div>`;
+    if (p.quote)      h += `<div class="lv-quote">"${esc(p.quote)}"</div>`;
+    if (p.what_to_do) h += `<div class="lv-row"><b>What to try:</b> ${esc(p.what_to_do)}</div>`;
+    if (p.best_for)   h += `<div class="lv-row"><b>Best for:</b> ${esc(p.best_for)}</div>`;
+    if (p.price_range)h += `<div class="lv-row"><b>Price:</b> ${esc(p.price_range)}</div>`;
+    if (p.notes)      h += `<div class="lv-row"><b>Notes:</b> ${esc(p.notes)}</div>`;
+    if (platform && p.uploader)
+      h += `<div class="lv-row"><b>Via:</b> ${platform.icon} ${platform.name} · @${esc(p.uploader)}</div>`;
+    else if (platform)
+      h += `<div class="lv-row"><b>Via:</b> ${platform.icon} ${platform.name}</div>`;
+    else if (p.uploader)
+      h += `<div class="lv-row"><b>Via:</b> @${esc(p.uploader)}</div>`;
+
+    h += '<div class="lv-btns">';
+    // Row 1: maps + show on map
+    h += '<div class="lv-btns-row">';
+    if (isUrl(p.maps_url))
+      h += `<a href="${p.maps_url}" target="_blank" class="lv-btn lv-btn-map">📍 Google Maps</a>`;
+    if (p.lat && p.lng) {
+      const appleUrl = `https://maps.apple.com/?q=${encodeURIComponent(p.name)}&ll=${p.lat},${p.lng}`;
+      h += `<a href="${appleUrl}" target="_blank" class="lv-btn lv-btn-apple">🍎 Apple Maps</a>`;
+    }
+    h += '</div>';
+    // Row 2: source + show-on-map
+    h += '<div class="lv-btns-row">';
+    if (isUrl(p.source_url) && platform)
+      h += `<a href="${p.source_url}" target="_blank" class="lv-btn lv-btn-source" style="background:${platform.color};color:white">${platform.icon} View on ${platform.name}</a>`;
+    else if (isUrl(p.source_url))
+      h += `<a href="${p.source_url}" target="_blank" class="lv-btn lv-btn-source">📱 View post</a>`;
+    const safeName = p.name.replace(/'/g, "\'");
+    h += `<button class="lv-btn lv-btn-pin" onclick="showOnMap('${safeName}')">🗺️ Show on map</button>`;
+    h += '</div>';
+    h += '</div>'; // lv-btns
+
+    if (p.photo_url)
+      h += `<img class="lv-photo" src="${p.photo_url}" alt="${esc(p.name)}" loading="lazy">`;
+
+    h += '</div>'; // lv-card
+    return h;
+  }
+
+  function showOnMap(name) {
+    // Close list view, fly to the pin, open its info window
+    document.getElementById('list-view').classList.remove('open');
+    const marker = markerByName[name];
+    if (!marker) return;
+    map.panTo(marker.getPosition());
+    map.setZoom(15);
+    const place = PLACES.find(p => p.name === name);
+    if (place) {
+      infoWindow.setContent(buildInfoHTML(place));
+      infoWindow.open(map, marker);
+    }
   }
 
   // Returns true only for proper http/https URLs — guards against column-shift
