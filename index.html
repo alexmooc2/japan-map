@@ -3217,6 +3217,9 @@
 
     infoWindow = new google.maps.InfoWindow({ maxWidth: 320 });
 
+    // Tap anywhere on the map (not on a marker) closes the open popup
+    map.addListener('click', () => infoWindow.close());
+
     const cities = new Set();
     const types  = new Set();
 
