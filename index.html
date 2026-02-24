@@ -3317,21 +3317,6 @@
     });
 
     // List view parent category chips
-    const PARENT_GROUPS = {
-      '🍜 Food':    ['Restaurant', 'Cafe', 'Bar'],
-      '🛍️ Shop':    ['Shop', 'Market'],
-      '🗺️ Explore': ['Attraction', 'Neighborhood', 'Service', 'Hotel', 'Other'],
-    };
-    // All known types across all parent groups
-    const ALL_KNOWN_TYPES = new Set(Object.values(PARENT_GROUPS).flat());
-    // A place belongs to a parent if its type is in that parent's list,
-    // OR if its type is unrecognised — in which case it falls into Explore.
-    function placeMatchesParent(p, parent) {
-      const parentTypes = PARENT_GROUPS[parent] || [];
-      if (parentTypes.includes(p.type)) return true;
-      if (parent === '🗺️ Explore' && !ALL_KNOWN_TYPES.has(p.type)) return true;
-      return false;
-    }
     const parentRow = document.getElementById('lv-parent-row');
     const allParentChip = document.createElement('button');
     allParentChip.className = 'lv-chip lv-parent-chip active';
@@ -3353,6 +3338,21 @@
 
     // Fit to all markers
     fitVisible();
+  }
+
+  // ── Parent category map (module-scope so all functions can access) ────────
+  const PARENT_GROUPS = {
+    '🍜 Food':    ['Restaurant', 'Cafe', 'Bar'],
+    '🛍️ Shop':    ['Shop', 'Market'],
+    '🗺️ Explore': ['Attraction', 'Neighborhood', 'Service', 'Hotel', 'Other'],
+  };
+  const ALL_KNOWN_TYPES = new Set(Object.values(PARENT_GROUPS).flat());
+  function placeMatchesParent(p, parent) {
+    const parentTypes = PARENT_GROUPS[parent] || [];
+    if (parentTypes.includes(p.type)) return true;
+    // Unrecognised types fall into Explore so nothing is ever lost
+    if (parent === '🗺️ Explore' && !ALL_KNOWN_TYPES.has(p.type)) return true;
+    return false;
   }
 
   // ── List view state ────────────────────────────────────────
