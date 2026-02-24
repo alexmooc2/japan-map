@@ -122,6 +122,38 @@
       flex-shrink: 0;
     }
 
+    /* Sort row */
+    #lv-sort-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 0 10px;
+    }
+    #lv-sort-row span {
+      font-size: 11px;
+      color: #999;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      flex-shrink: 0;
+    }
+    .lv-sort-btn {
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1.5px solid #ddd;
+      background: white;
+      font-size: 12px;
+      font-weight: 500;
+      color: #444;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .lv-sort-btn.active {
+      background: #1a73e8;
+      color: white;
+      border-color: #1a73e8;
+    }
+
     /* Filter chip rows */
     .lv-filter-row {
       display: flex;
@@ -359,6 +391,11 @@
         </span>
         <button id="lv-close" onclick="toggleListView()">✕</button>
       </div>
+      <div id="lv-sort-row">
+        <span>Sort</span>
+        <button class="lv-sort-btn active" data-sort="newest" onclick="setLvSort('newest')">🕐 Newest</button>
+        <button class="lv-sort-btn"        data-sort="oldest" onclick="setLvSort('oldest')">🕰 Oldest</button>
+      </div>
       <div class="lv-filter-row" id="lv-city-row"></div>
       <div class="lv-filter-row" id="lv-parent-row"></div>
       <div class="lv-sub-section" id="lv-sub-section" style="display:none">
@@ -373,6 +410,8 @@
   const PLACES = [
   {
     "name": "Kyoto Station",
+    "row_index": 1,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Train Station",
     "subcategory": "",
@@ -392,6 +431,8 @@
   },
   {
     "name": "Nara",
+    "row_index": 2,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Day Trip Destination",
     "subcategory": "",
@@ -411,6 +452,8 @@
   },
   {
     "name": "Uji",
+    "row_index": 3,
+    "date_saved": "2026-02-21",
     "type": "Neighborhood",
     "category": "Day Trip Destination",
     "subcategory": "",
@@ -430,6 +473,8 @@
   },
   {
     "name": "Fushimi Inari Taisha",
+    "row_index": 4,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Shrine",
     "subcategory": "",
@@ -449,6 +494,8 @@
   },
   {
     "name": "Arashiyama Bamboo Grove",
+    "row_index": 5,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Natural Attraction",
     "subcategory": "",
@@ -468,6 +515,8 @@
   },
   {
     "name": "Arashiyama",
+    "row_index": 6,
+    "date_saved": "2026-02-21",
     "type": "Neighborhood",
     "category": "District",
     "subcategory": "",
@@ -487,6 +536,8 @@
   },
   {
     "name": "Hakone",
+    "row_index": 8,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Day Trip Destination",
     "subcategory": "",
@@ -506,6 +557,8 @@
   },
   {
     "name": "Kushikatsu Daruma",
+    "row_index": 9,
+    "date_saved": "2026-02-21",
     "type": "Restaurant",
     "category": "Kushikatsu",
     "subcategory": "",
@@ -525,6 +578,8 @@
   },
   {
     "name": "Umeda Sky Building",
+    "row_index": 10,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Observation Deck",
     "subcategory": "",
@@ -544,6 +599,8 @@
   },
   {
     "name": "Isaribi",
+    "row_index": 11,
+    "date_saved": "2026-02-21",
     "type": "Restaurant",
     "category": "Robatayaki",
     "subcategory": "",
@@ -563,6 +620,8 @@
   },
   {
     "name": "neel",
+    "row_index": 12,
+    "date_saved": "2026-02-21",
     "type": "Cafe",
     "category": "Cafe",
     "subcategory": "",
@@ -582,6 +641,8 @@
   },
   {
     "name": "Universal Studios Japan",
+    "row_index": 13,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Theme Park",
     "subcategory": "",
@@ -601,6 +662,8 @@
   },
   {
     "name": "Salon de AManTo",
+    "row_index": 14,
+    "date_saved": "2026-02-21",
     "type": "Cafe",
     "category": "Cafe",
     "subcategory": "",
@@ -620,6 +683,8 @@
   },
   {
     "name": "Tsutaya Books Hirakata",
+    "row_index": 15,
+    "date_saved": "2026-02-21",
     "type": "Shop",
     "category": "Bookstore",
     "subcategory": "",
@@ -639,6 +704,8 @@
   },
   {
     "name": "Osaka Castle",
+    "row_index": 16,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Castle",
     "subcategory": "",
@@ -658,6 +725,8 @@
   },
   {
     "name": "Dotonbori River",
+    "row_index": 17,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Landmark",
     "subcategory": "",
@@ -677,6 +746,8 @@
   },
   {
     "name": "Universal Studios Japan",
+    "row_index": 18,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Theme Park",
     "subcategory": "",
@@ -696,6 +767,8 @@
   },
   {
     "name": "Umeda Sky Building",
+    "row_index": 19,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Observation Deck",
     "subcategory": "",
@@ -715,6 +788,8 @@
   },
   {
     "name": "Grand Green Osaka Park",
+    "row_index": 20,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Park",
     "subcategory": "",
@@ -734,6 +809,8 @@
   },
   {
     "name": "Abeno Harukas",
+    "row_index": 21,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Skyscraper",
     "subcategory": "",
@@ -753,6 +830,8 @@
   },
   {
     "name": "Pokémon Café Osaka",
+    "row_index": 22,
+    "date_saved": "2026-02-21",
     "type": "Cafe",
     "category": "Themed Cafe",
     "subcategory": "",
@@ -772,6 +851,8 @@
   },
   {
     "name": "Minoh Waterfall",
+    "row_index": 23,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Waterfall",
     "subcategory": "",
@@ -791,6 +872,8 @@
   },
   {
     "name": "Kaiyukan Aquarium",
+    "row_index": 24,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Aquarium",
     "subcategory": "",
@@ -810,6 +893,8 @@
   },
   {
     "name": "Denden Town",
+    "row_index": 25,
+    "date_saved": "2026-02-21",
     "type": "Neighborhood",
     "category": "Electronics District",
     "subcategory": "",
@@ -829,6 +914,8 @@
   },
   {
     "name": "Kyoto Station",
+    "row_index": 26,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Train Station",
     "subcategory": "",
@@ -848,6 +935,8 @@
   },
   {
     "name": "Nara",
+    "row_index": 27,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Town",
     "subcategory": "",
@@ -867,6 +956,8 @@
   },
   {
     "name": "Uji",
+    "row_index": 28,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Town",
     "subcategory": "",
@@ -886,6 +977,8 @@
   },
   {
     "name": "Fushimi Inari",
+    "row_index": 29,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Shrine",
     "subcategory": "",
@@ -905,6 +998,8 @@
   },
   {
     "name": "Bamboo Grove / Arashiyama Bamboo Grove",
+    "row_index": 30,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Natural Attraction",
     "subcategory": "",
@@ -924,6 +1019,8 @@
   },
   {
     "name": "Arashiyama",
+    "row_index": 31,
+    "date_saved": "2026-02-21",
     "type": "Neighborhood",
     "category": "District",
     "subcategory": "",
@@ -943,6 +1040,8 @@
   },
   {
     "name": "Hakone",
+    "row_index": 36,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Town",
     "subcategory": "",
@@ -962,6 +1061,8 @@
   },
   {
     "name": "Kushikatsu Daruma",
+    "row_index": 37,
+    "date_saved": "",
     "type": "Restaurant",
     "category": "Kushikatsu",
     "subcategory": "",
@@ -981,6 +1082,8 @@
   },
   {
     "name": "Umeda Sky Building",
+    "row_index": 38,
+    "date_saved": "",
     "type": "Attraction",
     "category": "Building/Observation Deck",
     "subcategory": "",
@@ -1000,6 +1103,8 @@
   },
   {
     "name": "Isaribi",
+    "row_index": 39,
+    "date_saved": "",
     "type": "Restaurant",
     "category": "Robatayaki",
     "subcategory": "",
@@ -1019,6 +1124,8 @@
   },
   {
     "name": "neel",
+    "row_index": 40,
+    "date_saved": "",
     "type": "Cafe",
     "category": "Cafe",
     "subcategory": "",
@@ -1038,6 +1145,8 @@
   },
   {
     "name": "Universal Studios Japan",
+    "row_index": 41,
+    "date_saved": "",
     "type": "Attraction",
     "category": "Theme Park",
     "subcategory": "",
@@ -1057,6 +1166,8 @@
   },
   {
     "name": "Salon de AManTo",
+    "row_index": 42,
+    "date_saved": "",
     "type": "Cafe",
     "category": "Dessert/Cafe",
     "subcategory": "",
@@ -1076,6 +1187,8 @@
   },
   {
     "name": "Tsutaya Books Hirakata",
+    "row_index": 43,
+    "date_saved": "",
     "type": "Shop",
     "category": "Bookstore",
     "subcategory": "",
@@ -1095,6 +1208,8 @@
   },
   {
     "name": "Osaka Castle",
+    "row_index": 44,
+    "date_saved": "",
     "type": "Attraction",
     "category": "Castle",
     "subcategory": "",
@@ -1114,6 +1229,8 @@
   },
   {
     "name": "Dotonbori River",
+    "row_index": 45,
+    "date_saved": "",
     "type": "Neighborhood",
     "category": "Entertainment District",
     "subcategory": "",
@@ -1133,6 +1250,8 @@
   },
   {
     "name": "Universal Studios Japan",
+    "row_index": 46,
+    "date_saved": "",
     "type": "Attraction",
     "category": "Theme Park",
     "subcategory": "",
@@ -1152,6 +1271,8 @@
   },
   {
     "name": "Abeno Harukas Skyscraper",
+    "row_index": 48,
+    "date_saved": "",
     "type": "Attraction",
     "category": "Skyscraper",
     "subcategory": "",
@@ -1171,6 +1292,8 @@
   },
   {
     "name": "Pokémon Café Osaka",
+    "row_index": 49,
+    "date_saved": "",
     "type": "Cafe",
     "category": "Themed Cafe",
     "subcategory": "",
@@ -1190,6 +1313,8 @@
   },
   {
     "name": "Minoh Waterfall",
+    "row_index": 50,
+    "date_saved": "2026-02-21",
     "type": "Attraction",
     "category": "Natural Waterfall",
     "subcategory": "",
@@ -1209,6 +1334,8 @@
   },
   {
     "name": "Kaiyukan Aquarium",
+    "row_index": 51,
+    "date_saved": "",
     "type": "Attraction",
     "category": "Aquarium",
     "subcategory": "",
@@ -1228,6 +1355,8 @@
   },
   {
     "name": "Denden Town",
+    "row_index": 52,
+    "date_saved": "2026-02-21",
     "type": "Neighborhood",
     "category": "Electronics/Anime District",
     "subcategory": "",
@@ -1247,6 +1376,8 @@
   },
   {
     "name": "Higuma Donuts",
+    "row_index": 55,
+    "date_saved": "",
     "type": "Cafe",
     "category": "Donut Shop",
     "subcategory": "",
@@ -1266,6 +1397,8 @@
   },
   {
     "name": "Koffee Mameya",
+    "row_index": 56,
+    "date_saved": "",
     "type": "Cafe",
     "category": "Coffee Shop",
     "subcategory": "",
@@ -1285,6 +1418,8 @@
   },
   {
     "name": "Matsubayasaryo",
+    "row_index": 57,
+    "date_saved": "",
     "type": "Restaurant",
     "category": "Japanese",
     "subcategory": "",
@@ -1304,6 +1439,8 @@
   },
   {
     "name": "Onibus Coffee",
+    "row_index": 58,
+    "date_saved": "2026-02-22",
     "type": "Cafe",
     "category": "Coffee Shop",
     "subcategory": "",
@@ -1323,6 +1460,8 @@
   },
   {
     "name": "Dekasan Osaka / デカサン",
+    "row_index": 59,
+    "date_saved": "2026-02-22",
     "type": "Restaurant",
     "category": "Sandwich Shop",
     "subcategory": "",
@@ -1342,6 +1481,8 @@
   },
   {
     "name": "Rikuro / リクロ",
+    "row_index": 60,
+    "date_saved": "2026-02-22",
     "type": "Cafe",
     "category": "Bakery",
     "subcategory": "",
@@ -1361,6 +1502,8 @@
   },
   {
     "name": "Wanaka Takoyaki / ワナカ",
+    "row_index": 61,
+    "date_saved": "2026-02-22",
     "type": "Restaurant",
     "category": "Takoyaki",
     "subcategory": "",
@@ -1380,6 +1523,8 @@
   },
   {
     "name": "Toichi Pancake / トイチ",
+    "row_index": 62,
+    "date_saved": "2026-02-22",
     "type": "Cafe",
     "category": "Pancake Shop",
     "subcategory": "",
@@ -1399,6 +1544,8 @@
   },
   {
     "name": "Fukutaro Honten / ふくたろ本店",
+    "row_index": 63,
+    "date_saved": "2026-02-22",
     "type": "Restaurant",
     "category": "Okonomiyaki",
     "subcategory": "",
@@ -1418,6 +1565,8 @@
   },
   {
     "name": "Ju-en Pan / 十円パン",
+    "row_index": 64,
+    "date_saved": "2026-02-22",
     "type": "Cafe",
     "category": "Bakery",
     "subcategory": "",
@@ -1437,6 +1586,8 @@
   },
   {
     "name": "Shogun Burger / ショーグン",
+    "row_index": 65,
+    "date_saved": "2026-02-22",
     "type": "Restaurant",
     "category": "Burger Shop",
     "subcategory": "",
@@ -1456,6 +1607,8 @@
   },
   {
     "name": "Wife and Husband Cafe",
+    "row_index": 69,
+    "date_saved": "2026-02-22",
     "type": "Cafe",
     "category": "Coffee Shop",
     "subcategory": "",
@@ -1475,6 +1628,8 @@
   },
   {
     "name": "Fine Art Garden / Fine Art Garden Kyoto",
+    "row_index": 70,
+    "date_saved": "2026-02-22",
     "type": "Attraction",
     "category": "Garden",
     "subcategory": "",
@@ -1494,6 +1649,8 @@
   },
   {
     "name": "Fushimi Inari",
+    "row_index": 71,
+    "date_saved": "2026-02-22",
     "type": "Attraction",
     "category": "Temple",
     "subcategory": "",
@@ -1513,6 +1670,8 @@
   },
   {
     "name": "Vermilion Cafe",
+    "row_index": 72,
+    "date_saved": "2026-02-22",
     "type": "Cafe",
     "category": "Cafe",
     "subcategory": "",
@@ -1532,6 +1691,8 @@
   },
   {
     "name": "Kyoto Recycle Kingdom",
+    "row_index": 74,
+    "date_saved": "2026-02-22",
     "type": "Shop",
     "category": "Thrift Store",
     "subcategory": "",
@@ -1551,6 +1712,8 @@
   },
   {
     "name": "Yokai Street / Monster Street",
+    "row_index": 75,
+    "date_saved": "2026-02-22",
     "type": "Neighborhood",
     "category": "Shopping District",
     "subcategory": "",
@@ -1570,6 +1733,8 @@
   },
   {
     "name": "Dekasan Osaka",
+    "row_index": 76,
+    "date_saved": "2026-02-22",
     "type": "Restaurant",
     "category": "Sandwich Shop",
     "subcategory": "",
@@ -1589,6 +1754,8 @@
   },
   {
     "name": "Rikuro 1956 / Rikuro",
+    "row_index": 77,
+    "date_saved": "2026-02-22",
     "type": "Cafe",
     "category": "Cheesecake",
     "subcategory": "",
@@ -1608,6 +1775,8 @@
   },
   {
     "name": "Toichi Pancake",
+    "row_index": 79,
+    "date_saved": "2026-02-22",
     "type": "Cafe",
     "category": "Pancake",
     "subcategory": "",
@@ -1627,6 +1796,8 @@
   },
   {
     "name": "Fukutaro Honten",
+    "row_index": 80,
+    "date_saved": "2026-02-22",
     "type": "Restaurant",
     "category": "Okonomiyaki",
     "subcategory": "",
@@ -1646,6 +1817,8 @@
   },
   {
     "name": "Shogun Burger",
+    "row_index": 82,
+    "date_saved": "2026-02-22",
     "type": "Restaurant",
     "category": "Burger",
     "subcategory": "",
@@ -1665,6 +1838,8 @@
   },
   {
     "name": "SOLAKZADE",
+    "row_index": 83,
+    "date_saved": "2026-02-22",
     "type": "Shop",
     "category": "Vintage Eyewear",
     "subcategory": "",
@@ -1684,6 +1859,8 @@
   },
   {
     "name": "Wife and Husband Cafe",
+    "row_index": 84,
+    "date_saved": "2026-02-22",
     "type": "Cafe",
     "category": "Coffee Shop",
     "subcategory": "Cafe / Coffee",
@@ -1703,6 +1880,8 @@
   },
   {
     "name": "The Fine Art Garden (Kyoto)",
+    "row_index": 85,
+    "date_saved": "2026-02-22",
     "type": "Attraction",
     "category": "Garden",
     "subcategory": "Cafe / Coffee",
@@ -1722,6 +1901,8 @@
   },
   {
     "name": "Fushimi Inari",
+    "row_index": 86,
+    "date_saved": "2026-02-22",
     "type": "Attraction",
     "category": "Temple",
     "subcategory": "Temple / Shrine",
@@ -1741,6 +1922,8 @@
   },
   {
     "name": "Vermilion Cafe",
+    "row_index": 87,
+    "date_saved": "2026-02-22",
     "type": "Cafe",
     "category": "Cafe",
     "subcategory": "Cafe / Coffee",
@@ -1760,6 +1943,8 @@
   },
   {
     "name": "Kyoto Recycle Kingdom",
+    "row_index": 89,
+    "date_saved": "2026-02-22",
     "type": "Shop",
     "category": "Thrift Store",
     "subcategory": "Thrift / Vintage",
@@ -1779,6 +1964,8 @@
   },
   {
     "name": "Yokai Street (Monster Street)",
+    "row_index": 90,
+    "date_saved": "2026-02-22",
     "type": "Neighborhood",
     "category": "Local Shopping District",
     "subcategory": "Cafe / Coffee",
@@ -1798,6 +1985,8 @@
   },
   {
     "name": "Hosogawa River Boat Ride",
+    "row_index": 91,
+    "date_saved": "2026-02-22",
     "type": "Attraction",
     "category": "Boat Tour",
     "subcategory": "",
@@ -1817,6 +2006,8 @@
   },
   {
     "name": "Percent Arabica",
+    "row_index": 93,
+    "date_saved": "2026-02-22",
     "type": "Cafe",
     "category": "Coffee",
     "subcategory": "",
@@ -1836,6 +2027,8 @@
   },
   {
     "name": "Arashino Nanbutsuji Temple",
+    "row_index": 94,
+    "date_saved": "",
     "type": "Attraction",
     "category": "Temple",
     "subcategory": "",
@@ -1855,6 +2048,8 @@
   },
   {
     "name": "Otaji Nanbutsuji Temple / Smiling Stone Statues Temple",
+    "row_index": 95,
+    "date_saved": "",
     "type": "Attraction",
     "category": "Temple",
     "subcategory": "",
@@ -1874,6 +2069,8 @@
   },
   {
     "name": "King Kakuji Temple",
+    "row_index": 96,
+    "date_saved": "2026-02-22",
     "type": "Attraction",
     "category": "Temple",
     "subcategory": "",
@@ -1893,6 +2090,8 @@
   },
   {
     "name": "Ninanji Temple",
+    "row_index": 97,
+    "date_saved": "2026-02-22",
     "type": "Attraction",
     "category": "Temple",
     "subcategory": "",
@@ -1912,6 +2111,8 @@
   },
   {
     "name": "Donut Stand",
+    "row_index": 98,
+    "date_saved": "2026-02-22",
     "type": "Shop",
     "category": "Donut Shop",
     "subcategory": "",
@@ -1931,6 +2132,8 @@
   },
   {
     "name": "Chikurin-ta",
+    "row_index": 99,
+    "date_saved": "2026-02-22",
     "type": "Restaurant",
     "category": "Ramen",
     "subcategory": "",
@@ -1950,6 +2153,8 @@
   },
   {
     "name": "Arashiyama Bamboo Forest",
+    "row_index": 100,
+    "date_saved": "2026-02-22",
     "type": "Attraction",
     "category": "Nature",
     "subcategory": "",
@@ -1969,6 +2174,8 @@
   },
   {
     "name": "Kimono Display / Kimono Light Display",
+    "row_index": 101,
+    "date_saved": "",
     "type": "Attraction",
     "category": "Light Display",
     "subcategory": "",
@@ -1988,6 +2195,8 @@
   },
   {
     "name": "Kyoto Central Station",
+    "row_index": 102,
+    "date_saved": "2026-02-22",
     "type": "Attraction",
     "category": "Train Station",
     "subcategory": "",
@@ -2007,6 +2216,8 @@
   },
   {
     "name": "Kyoto Tower",
+    "row_index": 103,
+    "date_saved": "",
     "type": "Attraction",
     "category": "Landmark",
     "subcategory": "",
@@ -2026,6 +2237,8 @@
   },
   {
     "name": "Sakura Terrace Hotel",
+    "row_index": 104,
+    "date_saved": "",
     "type": "Hotel",
     "category": "Hotel",
     "subcategory": "",
@@ -2045,6 +2258,8 @@
   },
   {
     "name": "Hakone Open Air Museum",
+    "row_index": 105,
+    "date_saved": "2026-02-23",
     "type": "Attraction",
     "category": "Museum",
     "subcategory": "Museum / Gallery",
@@ -2064,6 +2279,8 @@
   },
   {
     "name": "Hakone",
+    "row_index": 107,
+    "date_saved": "2026-02-23",
     "type": "Neighborhood",
     "category": "Town",
     "subcategory": "Museum / Gallery",
@@ -2083,6 +2300,8 @@
   },
   {
     "name": "Farmoon",
+    "row_index": 108,
+    "date_saved": "2026-02-23",
     "type": "Restaurant",
     "category": "Farm to Table",
     "subcategory": "Other Food",
@@ -2102,6 +2321,8 @@
   },
   {
     "name": "Hakone Pass",
+    "row_index": 110,
+    "date_saved": "2026-02-23",
     "type": "Service",
     "category": "Transportation Pass",
     "subcategory": "Scenic / Viewpoint",
@@ -2121,6 +2342,8 @@
   },
   {
     "name": "Café Ryusenkei",
+    "row_index": 111,
+    "date_saved": "",
     "type": "Cafe",
     "category": "Cafe",
     "subcategory": "Cafe / Coffee",
@@ -2140,6 +2363,8 @@
   },
   {
     "name": "The Hakone Open Air Museum",
+    "row_index": 112,
+    "date_saved": "",
     "type": "Attraction",
     "category": "Museum",
     "subcategory": "Museum / Gallery",
@@ -2159,6 +2384,8 @@
   },
   {
     "name": "Gora Hanougi",
+    "row_index": 113,
+    "date_saved": "",
     "type": "Hotel",
     "category": "Ryokan",
     "subcategory": "Other",
@@ -2178,6 +2405,8 @@
   },
   {
     "name": "㐂舌 法善寺 (Kitan Houzenji)",
+    "row_index": 114,
+    "date_saved": "2026-02-23",
     "type": "Restaurant",
     "category": "Yakiniku / Wagyu",
     "subcategory": "Yakiniku / BBQ",
@@ -2197,6 +2426,8 @@
   },
   {
     "name": "Kyoto",
+    "row_index": 115,
+    "date_saved": "",
     "type": "Neighborhood",
     "category": "City",
     "subcategory": "Temple / Shrine",
@@ -2216,6 +2447,8 @@
   },
   {
     "name": "Kyoto",
+    "row_index": 116,
+    "date_saved": "",
     "type": "Neighborhood",
     "category": "City",
     "subcategory": "Temple / Shrine",
@@ -2235,6 +2468,8 @@
   },
   {
     "name": "Jonongu Shrine",
+    "row_index": 117,
+    "date_saved": "2026-02-23",
     "type": "Attraction",
     "category": "Shrine",
     "subcategory": "Temple / Shrine",
@@ -2254,6 +2489,8 @@
   },
   {
     "name": "Three Star Kyoto",
+    "row_index": 118,
+    "date_saved": "2026-02-23",
     "type": "Shop",
     "category": "Vintage Clothing / Thrift",
     "subcategory": "Thrift / Vintage",
@@ -2273,6 +2510,8 @@
   },
   {
     "name": "Himeji Castle",
+    "row_index": 119,
+    "date_saved": "2026-02-23",
     "type": "Attraction",
     "category": "Castle",
     "subcategory": "Temple / Shrine",
@@ -2292,6 +2531,8 @@
   },
   {
     "name": "Okayama Castle",
+    "row_index": 120,
+    "date_saved": "",
     "type": "Attraction",
     "category": "Castle",
     "subcategory": "Temple / Shrine",
@@ -2311,6 +2552,8 @@
   },
   {
     "name": "Kurashiki",
+    "row_index": 121,
+    "date_saved": "2026-02-23",
     "type": "Neighborhood",
     "category": "Historic District",
     "subcategory": "Scenic / Viewpoint",
@@ -2330,6 +2573,8 @@
   },
   {
     "name": "Uji",
+    "row_index": 122,
+    "date_saved": "2026-02-23",
     "type": "Neighborhood",
     "category": "Tea Town",
     "subcategory": "Scenic / Viewpoint",
@@ -2349,6 +2594,8 @@
   },
   {
     "name": "Nintendo Museum",
+    "row_index": 123,
+    "date_saved": "",
     "type": "Attraction",
     "category": "Museum",
     "subcategory": "Museum / Gallery",
@@ -2368,6 +2615,8 @@
   },
   {
     "name": "TeamLab Kyoto",
+    "row_index": 124,
+    "date_saved": "2026-02-23",
     "type": "Attraction",
     "category": "Digital Art Museum",
     "subcategory": "Museum / Gallery",
@@ -2387,6 +2636,8 @@
   },
   {
     "name": "Arashiyama River Boat Ride",
+    "row_index": 125,
+    "date_saved": "2026-02-23",
     "type": "Attraction",
     "category": "Experience",
     "subcategory": "Entertainment",
@@ -2406,6 +2657,8 @@
   },
   {
     "name": "Nijo Castle",
+    "row_index": 126,
+    "date_saved": "2026-02-23",
     "type": "Attraction",
     "category": "Castle",
     "subcategory": "Temple / Shrine",
@@ -2425,6 +2678,8 @@
   },
   {
     "name": "Hakone Open Air Museum",
+    "row_index": 127,
+    "date_saved": "2026-02-23",
     "type": "Attraction",
     "category": "Museum",
     "subcategory": "Onsen / Spa",
@@ -2444,6 +2699,8 @@
   },
   {
     "name": "Hakone Ropeway",
+    "row_index": 129,
+    "date_saved": "",
     "type": "Attraction",
     "category": "Transportation/Scenic",
     "subcategory": "Onsen / Spa",
@@ -2463,6 +2720,8 @@
   },
   {
     "name": "Lake Ashi",
+    "row_index": 131,
+    "date_saved": "",
     "type": "Attraction",
     "category": "Natural Landmark",
     "subcategory": "Onsen / Spa",
@@ -2482,6 +2741,8 @@
   },
   {
     "name": "Utsuwa Marukaku",
+    "row_index": 132,
+    "date_saved": "",
     "type": "Shop",
     "category": "Ceramics",
     "subcategory": "Ceramics / Pottery",
@@ -2501,6 +2762,8 @@
   },
   {
     "name": "Kappabashi Street",
+    "row_index": 133,
+    "date_saved": "",
     "type": "Neighborhood",
     "category": "Shopping District",
     "subcategory": "Other Shop",
@@ -2520,6 +2783,8 @@
   },
   {
     "name": "Glitch Coffee",
+    "row_index": 135,
+    "date_saved": "",
     "type": "Cafe",
     "category": "Coffee Shop",
     "subcategory": "Cafe / Coffee",
@@ -2539,6 +2804,8 @@
   },
   {
     "name": "Utsuwa Marukaku / Otsuwa",
+    "row_index": 136,
+    "date_saved": "2026-02-23",
     "type": "Shop",
     "category": "Ceramics",
     "subcategory": "Ceramics / Pottery",
@@ -2558,6 +2825,8 @@
   },
   {
     "name": "Kappabashi Street",
+    "row_index": 137,
+    "date_saved": "2026-02-23",
     "type": "Market",
     "category": "Kitchenware & Ceramics",
     "subcategory": "Other Shop",
@@ -2577,6 +2846,8 @@
   },
   {
     "name": "Oud",
+    "row_index": 138,
+    "date_saved": "2026-02-23",
     "type": "Shop",
     "category": "Ceramics",
     "subcategory": "Ceramics / Pottery",
@@ -2596,6 +2867,8 @@
   },
   {
     "name": "Glitch Coffee",
+    "row_index": 139,
+    "date_saved": "2026-02-23",
     "type": "Cafe",
     "category": "Specialty Coffee",
     "subcategory": "Cafe / Coffee",
@@ -2615,6 +2888,8 @@
   },
   {
     "name": "Kado / @cottle.jp",
+    "row_index": 140,
+    "date_saved": "2026-02-23",
     "type": "Shop",
     "category": "Japanese Fashion Brand",
     "subcategory": "Clothing",
@@ -2634,6 +2909,8 @@
   },
   {
     "name": "Kojima / Kojima Jeans Street",
+    "row_index": 141,
+    "date_saved": "",
     "type": "Neighborhood",
     "category": "Fashion District",
     "subcategory": "Clothing",
@@ -2653,6 +2930,8 @@
   },
   {
     "name": "Cibone Case",
+    "row_index": 142,
+    "date_saved": "2026-02-23",
     "type": "Shop",
     "category": "Design Store / Home Decor",
     "subcategory": "Other Shop",
@@ -2672,6 +2951,8 @@
   },
   {
     "name": "Cibone",
+    "row_index": 143,
+    "date_saved": "2026-02-23",
     "type": "Shop",
     "category": "Design Store / Home Decor",
     "subcategory": "Other Shop",
@@ -2691,6 +2972,8 @@
   },
   {
     "name": "Okeya Kyujiro",
+    "row_index": 144,
+    "date_saved": "2026-02-23",
     "type": "Restaurant",
     "category": "Sushi",
     "subcategory": "Sushi / Omakase",
@@ -2710,6 +2993,8 @@
   },
   {
     "name": "Ginjo-Ramen Kubota",
+    "row_index": 146,
+    "date_saved": "2026-02-23",
     "type": "Restaurant",
     "category": "Ramen",
     "subcategory": "Ramen",
@@ -2729,6 +3014,8 @@
   },
   {
     "name": "Kurashiki",
+    "row_index": 148,
+    "date_saved": "2026-02-23",
     "type": "Neighborhood",
     "category": "Fashion District",
     "subcategory": "Ramen",
@@ -2748,6 +3035,8 @@
   },
   {
     "name": "Kapital Bisou",
+    "row_index": 150,
+    "date_saved": "2026-02-23",
     "type": "Shop",
     "category": "Fashion / Japanese Streetwear",
     "subcategory": "Clothing",
@@ -2767,6 +3056,8 @@
   },
   {
     "name": "Kapital Legs",
+    "row_index": 151,
+    "date_saved": "2026-02-23",
     "type": "Shop",
     "category": "Fashion / Japanese Streetwear",
     "subcategory": "Clothing",
@@ -2786,6 +3077,8 @@
   },
   {
     "name": "Duffel with Capital",
+    "row_index": 152,
+    "date_saved": "2026-02-23",
     "type": "Shop",
     "category": "Fashion / Japanese Streetwear",
     "subcategory": "Clothing",
@@ -2805,6 +3098,8 @@
   },
   {
     "name": "Capital Naked Store",
+    "row_index": 153,
+    "date_saved": "2026-02-23",
     "type": "Shop",
     "category": "Fashion / Japanese Streetwear",
     "subcategory": "Clothing",
@@ -2824,6 +3119,8 @@
   },
   {
     "name": "Century Denim Store",
+    "row_index": 154,
+    "date_saved": "2026-02-23",
     "type": "Shop",
     "category": "Fashion / Denim",
     "subcategory": "Clothing",
@@ -2843,6 +3140,8 @@
   },
   {
     "name": "Kapital Roppongi Hills Store 1",
+    "row_index": 155,
+    "date_saved": "2026-02-23",
     "type": "Shop",
     "category": "Fashion / Japanese Streetwear",
     "subcategory": "Clothing",
@@ -2862,6 +3161,8 @@
   },
   {
     "name": "Kapital Roppongi Hills Store 2",
+    "row_index": 156,
+    "date_saved": "2026-02-23",
     "type": "Shop",
     "category": "Fashion / Japanese Streetwear",
     "subcategory": "Clothing",
@@ -2881,6 +3182,8 @@
   },
   {
     "name": "Tsukiji Ihachi / 築地伊八",
+    "row_index": 157,
+    "date_saved": "2026-02-23",
     "type": "Restaurant",
     "category": "Seafood, King Crab",
     "subcategory": "Seafood",
@@ -2900,6 +3203,8 @@
   },
   {
     "name": "Oke",
+    "row_index": 158,
+    "date_saved": "2026-02-23",
     "type": "Restaurant",
     "category": "Sushi, Japanese Cuisine",
     "subcategory": "Seafood",
@@ -2919,6 +3224,8 @@
   },
   {
     "name": "Studio de Artisan",
+    "row_index": 160,
+    "date_saved": "2026-02-23",
     "type": "Shop",
     "category": "Denim",
     "subcategory": "Clothing",
@@ -2938,6 +3245,8 @@
   },
   {
     "name": "Green Pepe",
+    "row_index": 163,
+    "date_saved": "2026-02-23",
     "type": "Shop",
     "category": "Vintage",
     "subcategory": "Other Shop",
@@ -2957,6 +3266,8 @@
   },
   {
     "name": "Hinder Scheme",
+    "row_index": 166,
+    "date_saved": "2026-02-23",
     "type": "Shop",
     "category": "Leather Goods",
     "subcategory": "Clothing",
@@ -2976,6 +3287,8 @@
   },
   {
     "name": "奈良井宿 / Narai-juku",
+    "row_index": 167,
+    "date_saved": "2026-02-24",
     "type": "Neighborhood",
     "category": "Historic Village",
     "subcategory": "Other",
@@ -2995,6 +3308,8 @@
   },
   {
     "name": "上高地 / Kamikochi",
+    "row_index": 168,
+    "date_saved": "2026-02-24",
     "type": "Attraction",
     "category": "Mountain Valley",
     "subcategory": "Other",
@@ -3014,6 +3329,8 @@
   },
   {
     "name": "霧ヶ峰高原 / Kirigamine Highland",
+    "row_index": 169,
+    "date_saved": "2026-02-24",
     "type": "Attraction",
     "category": "Highland",
     "subcategory": "Other",
@@ -3033,6 +3350,8 @@
   },
   {
     "name": "白馬村 / Hakuba Village",
+    "row_index": 170,
+    "date_saved": "2026-02-24",
     "type": "Neighborhood",
     "category": "Mountain Village",
     "subcategory": "Other",
@@ -3052,6 +3371,8 @@
   },
   {
     "name": "Edo Tokyo Open Air Museum",
+    "row_index": 171,
+    "date_saved": "2026-02-24",
     "type": "Attraction",
     "category": "Open Air Museum",
     "subcategory": "Museum / Gallery",
@@ -3071,6 +3392,8 @@
   },
   {
     "name": "Edo Tokyo Open Air Museum",
+    "row_index": 172,
+    "date_saved": "2026-02-24",
     "type": "Attraction",
     "category": "Open Air Museum",
     "subcategory": "Museum / Gallery",
@@ -3090,6 +3413,8 @@
   },
   {
     "name": "Weekenders Coffee",
+    "row_index": 173,
+    "date_saved": "2026-02-24",
     "type": "Cafe",
     "category": "Coffee Shop",
     "subcategory": "Cafe / Coffee",
@@ -3109,6 +3434,8 @@
   },
   {
     "name": "Weekenders Coffee",
+    "row_index": 174,
+    "date_saved": "2026-02-24",
     "type": "Cafe",
     "category": "Coffee Shop",
     "subcategory": "Cafe / Coffee",
@@ -3128,6 +3455,8 @@
   },
   {
     "name": "Edo Tokyo Open Air Museum",
+    "row_index": 175,
+    "date_saved": "2026-02-24",
     "type": "Attraction",
     "category": "Museum",
     "subcategory": "Museum / Gallery",
@@ -3147,6 +3476,8 @@
   },
   {
     "name": "Maruni Shoten",
+    "row_index": 176,
+    "date_saved": "2026-02-24",
     "type": "Shop",
     "category": "Kitchenware Store",
     "subcategory": "Other Shop",
@@ -3166,6 +3497,8 @@
   },
   {
     "name": "Toden Streetcar Model 7500",
+    "row_index": 179,
+    "date_saved": "2026-02-24",
     "type": "Attraction",
     "category": "Historic Streetcar",
     "subcategory": "Museum / Gallery",
@@ -3185,6 +3518,8 @@
   },
   {
     "name": "Jigokudani Monkey Park",
+    "row_index": 180,
+    "date_saved": "2026-02-24",
     "type": "Attraction",
     "category": "Wildlife Park",
     "subcategory": "Park / Nature",
@@ -3204,6 +3539,8 @@
   },
   {
     "name": "Jigokudani Monkey Park / Jigokudani Yaen-koen",
+    "row_index": 181,
+    "date_saved": "2026-02-24",
     "type": "Attraction",
     "category": "Wildlife Park",
     "subcategory": "Park / Nature",
@@ -3223,6 +3560,8 @@
   },
   {
     "name": "Shirakawa-go / 白川郷",
+    "row_index": 182,
+    "date_saved": "2026-02-24",
     "type": "Attraction",
     "category": "Historic Village",
     "subcategory": "Scenic / Viewpoint",
@@ -3242,6 +3581,8 @@
   },
   {
     "name": "Hida / 飛騨",
+    "row_index": 184,
+    "date_saved": "2026-02-24",
     "type": "Neighborhood",
     "category": "Historic Region",
     "subcategory": "Scenic / Viewpoint",
@@ -3261,6 +3602,8 @@
   },
   {
     "name": "Tsukechi Gorge / 付知峡",
+    "row_index": 185,
+    "date_saved": "2026-02-24",
     "type": "Attraction",
     "category": "Natural Gorge",
     "subcategory": "Scenic / Viewpoint",
@@ -3280,6 +3623,8 @@
   },
   {
     "name": "Sushi Rakumi (楽味)",
+    "row_index": 187,
+    "date_saved": "2026-02-24",
     "type": "Restaurant",
     "category": "Sushi / Omakase",
     "subcategory": "Sushi / Omakase",
@@ -3299,6 +3644,8 @@
   },
   {
     "name": "Sushi Rakumi / 楽味",
+    "row_index": 188,
+    "date_saved": "2026-02-24",
     "type": "Restaurant",
     "category": "Sushi / Omakase",
     "subcategory": "Sushi / Omakase",
@@ -3318,6 +3665,8 @@
   },
   {
     "name": "Stopey",
+    "row_index": 189,
+    "date_saved": "2026-02-24",
     "type": "Shop",
     "category": "Thrift Store",
     "subcategory": "Thrift / Vintage",
@@ -3337,6 +3686,8 @@
   },
   {
     "name": "Jam",
+    "row_index": 190,
+    "date_saved": "2026-02-24",
     "type": "Shop",
     "category": "Thrift Store",
     "subcategory": "Thrift / Vintage",
@@ -3356,6 +3707,8 @@
   },
   {
     "name": "Sushi Labo",
+    "row_index": 191,
+    "date_saved": "2026-02-24",
     "type": "Restaurant",
     "category": "Omakase / Sushi",
     "subcategory": "Sushi / Omakase",
@@ -3375,6 +3728,8 @@
   },
   {
     "name": "Kyo Amahare",
+    "row_index": 192,
+    "date_saved": "2026-02-24",
     "type": "Cafe",
     "category": "Cafe / Coffee",
     "subcategory": "Cafe / Coffee",
@@ -3394,6 +3749,8 @@
   },
   {
     "name": "Kai Okuhida",
+    "row_index": 193,
+    "date_saved": "2026-02-24",
     "type": "Hotel",
     "category": "Onsen Hotel",
     "subcategory": "Onsen / Spa",
@@ -3413,6 +3770,8 @@
   },
   {
     "name": "I'm Donut",
+    "row_index": 195,
+    "date_saved": "2026-02-24",
     "type": "Cafe",
     "category": "Donut Shop",
     "subcategory": "Dessert / Sweets",
@@ -3432,6 +3791,8 @@
   },
   {
     "name": "Weekender's Coffee",
+    "row_index": 196,
+    "date_saved": "2026-02-24",
     "type": "Cafe",
     "category": "Coffee Shop",
     "subcategory": "Cafe / Coffee",
@@ -3451,6 +3812,8 @@
   },
   {
     "name": "Nishiki Market",
+    "row_index": 197,
+    "date_saved": "2026-02-24",
     "type": "Market",
     "category": "Food Market",
     "subcategory": "Market",
@@ -3470,6 +3833,8 @@
   },
   {
     "name": "Keninji Temple",
+    "row_index": 198,
+    "date_saved": "2026-02-24",
     "type": "Attraction",
     "category": "Temple",
     "subcategory": "Temple / Shrine",
@@ -3489,6 +3854,8 @@
   },
   {
     "name": "Brisk Stain",
+    "row_index": 199,
+    "date_saved": "2026-02-24",
     "type": "Restaurant",
     "category": "Burger",
     "subcategory": "Burger / Western",
@@ -3508,6 +3875,8 @@
   },
   {
     "name": "Kodaiji Temple",
+    "row_index": 201,
+    "date_saved": "2026-02-24",
     "type": "Attraction",
     "category": "Temple",
     "subcategory": "Temple / Shrine",
@@ -3527,6 +3896,8 @@
   },
   {
     "name": "Gion Tanto",
+    "row_index": 202,
+    "date_saved": "2026-02-24",
     "type": "Restaurant",
     "category": "Yakitori / Grilled",
     "subcategory": "Other Food",
@@ -3694,8 +4065,17 @@
     return false;
   }
 
+  // ── Sort key helper ───────────────────────────────────────
+  // Rows with a real date sort by datetime. Rows with no date fall back to
+  // row_index so old data stays in its natural sheet order, grouped before
+  // any dated entries when sorting oldest-first.
+  function sortKey(p) {
+    if (p.date_saved) return p.date_saved;   // "2026-02-22T15:34" sorts lexicographically
+    return '0000-00-00T00:' + String(p.row_index).padStart(5, '0');  // before all real dates
+  }
+
   // ── List view state ────────────────────────────────────────
-  let lvCity = 'all', lvParent = 'all', lvSub = 'all';
+  let lvCity = 'all', lvParent = 'all', lvSub = 'all', lvSort = 'newest';
 
   function toggleListView() {
     const lv = document.getElementById('list-view');
@@ -3760,20 +4140,30 @@
     renderList();
   }
 
+  function setLvSort(sort) {
+    lvSort = sort;
+    document.querySelectorAll('.lv-sort-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.sort === sort));
+    renderList();
+  }
+
   const LV_PAGE = 30;       // cards per page
   let lvFiltered = [];      // current filtered set
   let lvRendered  = 0;      // how many cards are in the DOM
 
   function renderList() {
-    lvFiltered = PLACES.filter(p => {
-      if (!p.lat || !p.lng) return false;
-      if (lvCity !== 'all' && p.city !== lvCity) return false;
-      if (lvParent !== 'all') {
-        if (!placeMatchesParent(p, lvParent)) return false;
-      }
-      if (lvSub !== 'all' && p.subcategory !== lvSub) return false;
-      return true;
-    });
+    lvFiltered = PLACES
+      .filter(p => {
+        if (!p.lat || !p.lng) return false;
+        if (lvCity !== 'all' && p.city !== lvCity) return false;
+        if (lvParent !== 'all' && !placeMatchesParent(p, lvParent)) return false;
+        if (lvSub !== 'all' && p.subcategory !== lvSub) return false;
+        return true;
+      })
+      .sort((a, b) => {
+        const ka = sortKey(a), kb = sortKey(b);
+        return lvSort === 'newest' ? kb.localeCompare(ka) : ka.localeCompare(kb);
+      });
 
     document.getElementById('lv-count').textContent =
       lvFiltered.length + ' place' + (lvFiltered.length === 1 ? '' : 's');
