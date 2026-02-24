@@ -137,10 +137,11 @@
     .iw-btn-source { background: #f1f3f4; color: #333; }
     .iw-photo {
       width: 100%;
-      height: 120px;
+      height: 140px;
       object-fit: cover;
       border-radius: 10px;
-      margin-bottom: 10px;
+      margin-top: 12px;
+      margin-bottom: 4px;
       display: block;
       background: #f0f0f0;
     }
@@ -2569,14 +2570,13 @@
     const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     const platform = getPlatform(p.source_url);
     let h = '<div class="iw">';
-    if (p.photo_url) {
-      h += `<img class="iw-photo" src="${p.photo_url}" alt="${esc(p.name)}" loading="lazy">`;
-    }
+    // Name + sub always at top
     h += `<div class="iw-name">${esc(p.name)}</div>`;
     const typeIcon = TYPE_ICONS[p.type] || '📌';
     const sub = [p.category, p.city, p.area].filter(Boolean).join(' · ');
     if (sub) h += `<div class="iw-sub">${typeIcon} ${esc(sub)}</div>`;
     else if (p.type) h += `<div class="iw-sub">${typeIcon} ${esc(p.type)}</div>`;
+    // Quote + details come next — always visible without scrolling
     if (p.quote)       h += `<div class="iw-quote">"${esc(p.quote)}"</div>`;
     if (p.what_to_do)  h += `<div class="iw-row"><b>What to try:</b> ${esc(p.what_to_do)}</div>`;
     if (p.best_for)    h += `<div class="iw-row"><b>Best for:</b> ${esc(p.best_for)}</div>`;
@@ -2588,6 +2588,7 @@
       h += `<div class="iw-row"><b>Via:</b> ${platform.icon} ${platform.name}</div>`;
     else if (p.uploader)
       h += `<div class="iw-row"><b>Via:</b> @${esc(p.uploader)}</div>`;
+    // Action buttons — always visible without scrolling
     h += '<div class="iw-btns">';
     // Row 1: Google Maps + Apple Maps (only render if URLs are valid)
     h += '<div class="iw-btns-row">';
@@ -2602,7 +2603,12 @@
       h += `<a href="${p.source_url}" target="_blank" class="iw-btn iw-btn-source" style="background:${platform.color};color:white">${platform.icon} View on ${platform.name}</a>`;
     else if (isUrl(p.source_url))
       h += `<a href="${p.source_url}" target="_blank" class="iw-btn iw-btn-source">📱 View source post</a>`;
-    h += '</div></div>';
+    h += '</div>';
+    // Photo at the bottom — bonus content, doesn't push critical info off-screen
+    if (p.photo_url) {
+      h += `<img class="iw-photo" src="${p.photo_url}" alt="${esc(p.name)}" loading="lazy">`;
+    }
+    h += '</div>';
     return h;
   }
 
