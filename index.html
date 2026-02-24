@@ -149,6 +149,31 @@
       color: white;
       border-color: #1a73e8;
     }
+    .lv-sub-section {
+      padding: 2px 14px 0;
+    }
+    .lv-sub-label {
+      font-size: 11px;
+      color: #999;
+      margin-bottom: 4px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .lv-sub-section .lv-filter-row {
+      padding: 0;
+    }
+    .lv-sub-section .lv-chip {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-color: #bcd;
+      color: #1a73e8;
+    }
+    .lv-sub-section .lv-chip.active {
+      background: #1a73e8;
+      color: white;
+      border-color: #1a73e8;
+    }
 
     /* Cards list */
     #lv-list {
@@ -336,7 +361,10 @@
       </div>
       <div class="lv-filter-row" id="lv-city-row"></div>
       <div class="lv-filter-row" id="lv-parent-row"></div>
-      <div class="lv-filter-row" id="lv-sub-row" style="display:none"></div>
+      <div class="lv-sub-section" id="lv-sub-section" style="display:none">
+        <div class="lv-sub-label">↳ Filter by type</div>
+        <div class="lv-filter-row" id="lv-sub-row"></div>
+      </div>
     </div>
     <div id="lv-list"></div>
   </div>
@@ -2690,7 +2718,7 @@
     "quote": "both are so memorable so delicious",
     "what_to_do": "Try the tsukemen",
     "best_for": "tsukemen enthusiasts",
-    "price_range": "",
+    "price_range": "$$",
     "notes": "Recommended by local chef. Serves memorable tsukemen with rich, savory broth.",
     "uploader": "itsjulianmu",
     "maps_url": "https://www.google.com/maps/search/?api=1&query=Ginjo%20Ramen%20Kubota&query_place_id=ChIJXS16PKEIAWARdcr1_YXNGiw",
@@ -2709,7 +2737,7 @@
     "quote": "this is my favorite japanese dish of all time",
     "what_to_do": "Explore Okayama's esteemed fashion district",
     "best_for": "fashion and Japanese manufacturing appreciation",
-    "price_range": "",
+    "price_range": "$$",
     "notes": "Historic textile and fashion district",
     "uploader": "itsjulianmu",
     "maps_url": "https://www.google.com/maps/search/?api=1&query=Kurashiki&query_place_id=ChIJHRYTPbhZUTURPsJqUXABtgM",
@@ -2952,7 +2980,7 @@
     "category": "Historic Village",
     "subcategory": "Other",
     "city": "Nagano",
-    "area": "",
+    "area": "Narai",
     "quote": "Great summer experience in Nagano",
     "what_to_do": "Explore the old village",
     "best_for": "Summer sightseeing, historic architecture",
@@ -3009,7 +3037,7 @@
     "category": "Mountain Village",
     "subcategory": "Other",
     "city": "Nagano",
-    "area": "",
+    "area": "Hakuba",
     "quote": "Great summer experience in Nagano",
     "what_to_do": "Explore the mountain village",
     "best_for": "Summer mountain village experience",
@@ -3537,23 +3565,23 @@
     document.querySelectorAll('.lv-parent-chip').forEach(c =>
       c.classList.toggle('active', c.dataset.val === parent));
 
-    const subRow = document.getElementById('lv-sub-row');
+    const subSection = document.getElementById('lv-sub-section');
+    const subRow     = document.getElementById('lv-sub-row');
     subRow.innerHTML = '';
 
     if (parent === 'all') {
-      subRow.style.display = 'none';
+      subSection.style.display = 'none';
     } else {
-      // Collect subcategories that actually exist in the filtered-by-parent places
-      const parentTypes = PARENT_GROUPS[parent] || [];
+      // Collect subcategories that exist in places matching this parent
       const subs = new Set(
         PLACES
           .filter(p => placeMatchesParent(p, parent) && p.subcategory)
           .map(p => p.subcategory)
       );
       if (subs.size === 0) {
-        subRow.style.display = 'none';
+        subSection.style.display = 'none';
       } else {
-        subRow.style.display = '';
+        subSection.style.display = '';
         const allSubChip = document.createElement('button');
         allSubChip.className = 'lv-chip lv-sub-chip active';
         allSubChip.textContent = 'All';
