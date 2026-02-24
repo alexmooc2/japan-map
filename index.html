@@ -275,10 +275,11 @@
       display: block;
       line-height: 1;
     }
-    .lv-btn-map    { background: #1a73e8; color: white; }
-    .lv-btn-apple  { background: #000;    color: white; }
-    .lv-btn-source { background: #f1f3f4; color: #333; }
-    .lv-btn-pin    { background: #f1f3f4; color: #333; }
+    .lv-btn-map     { background: #1a73e8; color: white; }
+    .lv-btn-apple   { background: #000;    color: white; }
+    .lv-btn-source  { background: #f1f3f4; color: #333; }
+    .lv-btn-pin     { background: #f1f3f4; color: #333; }
+    .lv-btn-tabelog { background: #e05a2b; color: white; }
     .lv-photo {
       width: 100%;
       height: 140px;
@@ -358,9 +359,10 @@
       display: block;
       line-height: 1;
     }
-    .iw-btn-gmaps  { background: #1a73e8; color: white; }
-    .iw-btn-amaps  { background: #000; color: white; }
-    .iw-btn-source { background: #f1f3f4; color: #333; }
+    .iw-btn-gmaps   { background: #1a73e8; color: white; }
+    .iw-btn-amaps   { background: #000; color: white; }
+    .iw-btn-source  { background: #f1f3f4; color: #333; }
+    .iw-btn-tabelog { background: #e05a2b; color: white; }
     .iw-photo {
       width: 100%;
       height: 140px;
@@ -4775,12 +4777,14 @@
       h += `<a href="${appleUrl}" target="_blank" class="lv-btn lv-btn-apple">🍎 Apple Maps</a>`;
     }
     h += '</div>';
-    // Row 2: source + show-on-map
+    // Row 2: source + tabelog search + show-on-map
     h += '<div class="lv-btns-row">';
     if (isUrl(p.source_url) && platform)
       h += `<a href="${p.source_url}" target="_blank" class="lv-btn lv-btn-source" style="background:${platform.color};color:white">${platform.icon} View on ${platform.name}</a>`;
     else if (isUrl(p.source_url))
       h += `<a href="${p.source_url}" target="_blank" class="lv-btn lv-btn-source">📱 View post</a>`;
+    const tabelogSearchLv = `https://www.google.com/search?q=tabelog+${encodeURIComponent(p.name)}${p.city ? '+' + encodeURIComponent(p.city) : ''}&btnI=1`;
+    h += `<a href="${tabelogSearchLv}" target="_blank" class="lv-btn lv-btn-tabelog">🍽️ Tabelog</a>`;
     const safeName = p.name.replace(/'/g, "\'");
     h += `<button class="lv-btn lv-btn-pin" onclick="showOnMap('${safeName}')">🗺️ Show on map</button>`;
     h += '</div>';
@@ -4860,6 +4864,9 @@
       h += `<a href="${p.source_url}" target="_blank" class="iw-btn iw-btn-source" style="background:${platform.color};color:white">${platform.icon} View on ${platform.name}</a>`;
     else if (isUrl(p.source_url))
       h += `<a href="${p.source_url}" target="_blank" class="iw-btn iw-btn-source">📱 View source post</a>`;
+    // Row 3: Tabelog search
+    const tabelogSearchIw = `https://www.google.com/search?q=tabelog+${encodeURIComponent(p.name)}${p.city ? '+' + encodeURIComponent(p.city) : ''}&btnI=1`;
+    h += `<a href="${tabelogSearchIw}" target="_blank" class="iw-btn iw-btn-tabelog">🍽️ Search Tabelog</a>`;
     h += '</div>';
     // Photo at the bottom — bonus content, doesn't push critical info off-screen
     if (p.photo_url) {
