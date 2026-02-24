@@ -4066,12 +4066,16 @@
   }
 
   // ── Sort key helper ───────────────────────────────────────
-  // Rows with a real date sort by datetime. Rows with no date fall back to
-  // row_index so old data stays in its natural sheet order, grouped before
-  // any dated entries when sorting oldest-first.
+  // Produces YYYY-MM-DDTHH:MM_RRRRRR so all entries are comparable.
+  // Old rows have date-only ("2026-02-22"), new rows have datetime ("2026-02-22T15:34").
+  // row_index is always the tiebreaker so same-date rows respect sheet order.
+  // Undated rows get "0000-00-00" so they sit at the oldest end.
   function sortKey(p) {
-    if (p.date_saved) return p.date_saved;   // "2026-02-22T15:34" sorts lexicographically
-    return '0000-00-00T00:' + String(p.row_index).padStart(5, '0');  // before all real dates
+    const ds       = p.date_saved || '';
+    const datePart = ds.slice(0, 10) || '0000-00-00';
+    const timePart = ds.length >= 16 ? ds.slice(11, 16) : '00:00';
+    const idx      = String(p.row_index).padStart(6, '0');
+    return datePart + 'T' + timePart + '_' + idx;
   }
 
   // ── List view state ────────────────────────────────────────
