@@ -282,7 +282,7 @@
     .lv-btn-tabelog { background: #e05a2b; color: white; }
     .lv-photo {
       width: 100%;
-      height: 140px;
+      height: 200px;
       object-fit: cover;
       border-radius: 10px;
       margin-top: 11px;
@@ -365,7 +365,7 @@
     .iw-btn-tabelog { background: #e05a2b; color: white; }
     .iw-photo {
       width: 100%;
-      height: 140px;
+      height: 200px;
       object-fit: cover;
       border-radius: 10px;
       margin-top: 12px;
@@ -4925,6 +4925,10 @@
     const sub = [p.category, p.city, p.area].filter(Boolean).join(' · ');
     if (sub) h += `<div class="iw-sub">${typeIcon} ${esc(sub)}</div>`;
     else if (p.type) h += `<div class="iw-sub">${typeIcon} ${esc(p.type)}</div>`;
+    // Photo right after name/sub — most visually important
+    if (p.photo_url) {
+      h += `<img class="iw-photo" src="${p.photo_url}" alt="${esc(p.name)}" loading="lazy">`;
+    }
     // Quote + details come next — always visible without scrolling
     if (p.quote)       h += `<div class="iw-quote">"${esc(p.quote)}"</div>`;
     if (p.what_to_do)  h += `<div class="iw-row"><b>What to try:</b> ${esc(p.what_to_do)}</div>`;
@@ -4956,10 +4960,6 @@
     const tabelogSearchIw = `https://www.google.com/search?q=tabelog+${encodeURIComponent(p.name)}${p.city ? '+' + encodeURIComponent(p.city) : ''}&btnI=1`;
     h += `<a href="${tabelogSearchIw}" target="_blank" class="iw-btn iw-btn-tabelog">🍽️ Search Tabelog</a>`;
     h += '</div>';
-    // Photo at the bottom — bonus content, doesn't push critical info off-screen
-    if (p.photo_url) {
-      h += `<img class="iw-photo" src="${p.photo_url}" alt="${esc(p.name)}" loading="lazy">`;
-    }
     h += '</div>';
     return h;
   }
