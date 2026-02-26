@@ -5423,8 +5423,7 @@
       h += `<a href="${p.source_url}" target="_blank" class="lv-btn lv-btn-source">📱 View post</a>`;
     const tabelogSearchLv = `https://www.google.com/search?q=tabelog+${encodeURIComponent(p.name)}${p.city ? '+' + encodeURIComponent(p.city) : ''}&btnI=1`;
     h += `<a href="${tabelogSearchLv}" target="_blank" class="lv-btn lv-btn-tabelog">🍽️ Tabelog</a>`;
-    const safeName = p.name.replace(/'/g, "\'");
-    h += `<button class="lv-btn lv-btn-pin" onclick="showOnMap('${safeName}')">🗺️ Show on map</button>`;
+    h += `<button class="lv-btn lv-btn-pin" data-name="${esc(p.name)}" onclick="showOnMap(this.dataset.name)">🗺️ Show on map</button>`;
     h += '</div>';
     h += '</div>'; // lv-btns
 
