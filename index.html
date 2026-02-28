@@ -7399,7 +7399,7 @@
   const markerByName = {};   // name → marker, for list-view "show on map"
 
   // Map filter state
-  let mapFilterParent = 'all', mapFilterSub = 'all';
+  let mapFilterCity = 'all', mapFilterParent = 'all', mapFilterSub = 'all';
 
   function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -7454,6 +7454,12 @@
 
     // Map city filter buttons
     const bar = document.getElementById('filters');
+    const allBtn = document.createElement('button');
+    allBtn.className = 'filter-btn active';
+    allBtn.textContent = 'All';
+    allBtn.onclick = () => filterCity('all');
+    bar.appendChild(allBtn);
+
     [...cities].sort().forEach(city => {
       const btn = document.createElement('button');
       btn.className = 'filter-btn';
@@ -7905,14 +7911,11 @@
   }
 
   function _applyMapFilter() {
-    // Get the active city from the city filter bar
-    const activeCityBtn = document.querySelector('.filter-btn.active');
-    const activeCity = activeCityBtn ? activeCityBtn.textContent : 'All';
-
+    // Use state variables (not DOM) for consistent filtering across map and list
     markers.forEach(m => {
       const p = PLACES.find(pl => pl.name === m.title);
       if (!p) { m.setVisible(false); return; }
-      const cityOk   = activeCity === 'All' || m._city === activeCity;
+      const cityOk   = mapFilterCity === 'all' || m._city === mapFilterCity;
       const parentOk = mapFilterParent === 'all' || placeMatchesParent(p, mapFilterParent);
       const subOk    = mapFilterSub === 'all' || p.subcategory === mapFilterSub;
       m.setVisible(cityOk && parentOk && subOk);
@@ -7922,9 +7925,9 @@
   }
 
   function filterCity(city) {
+    mapFilterCity = city;
     document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.classList.toggle('active',
-        btn.textContent === city || (city === 'all' && btn.textContent === 'All'));
+      btn.classList.toggle('active', btn.textContent === city || btn.textContent === 'All' && city === 'all');
     });
     _applyMapFilter();
   }
