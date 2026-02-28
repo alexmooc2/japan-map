@@ -13,12 +13,38 @@
     #map { width: 100vw; height: 100vh; }
 
     /* ── Filter bar ── */
-    #filters {
+    #filter-bar-wrapper {
       position: fixed;
       top: env(safe-area-inset-top, 12px);
       left: 50%;
       transform: translateX(-50%);
       z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: calc(100vw - 32px);
+    }
+    #map-filter-btn {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    #map-filter-btn.active {
+      background: #1a73e8;
+    }
+    #filters {
       display: flex;
       gap: 6px;
       background: rgba(255,255,255,0.95);
@@ -28,7 +54,6 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       overflow-x: auto;
-      max-width: calc(100vw - 32px);
       scrollbar-width: none;
     }
     #filters::-webkit-scrollbar { display: none; }
@@ -49,6 +74,54 @@
       background: #1a73e8;
       color: white;
     }
+
+    /* ── Map filter panel (parent + sub category) ── */
+    #map-filter-panel {
+      position: fixed;
+      top: calc(env(safe-area-inset-top, 12px) + 56px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 99;
+      width: calc(100vw - 32px);
+      max-width: 600px;
+      background: rgba(255,255,255,0.97);
+      border-radius: 18px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 12px 14px 8px;
+      display: none;
+    }
+    #map-filter-panel.open { display: block; }
+    #mf-parent-row {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scrollbar-width: none;
+    }
+    #mf-parent-row::-webkit-scrollbar { display: none; }
+    #mf-sub-section {
+      padding-top: 6px;
+      display: none;
+    }
+    #mf-sub-section.visible { display: block; }
+    .mf-sub-label {
+      font-size: 11px;
+      color: #999;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+    #mf-sub-row {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    #mf-sub-row::-webkit-scrollbar { display: none; }
 
     /* ── FAB buttons (locate + list) ── */
     .fab {
@@ -376,8 +449,19 @@
   </style>
 </head>
 <body>
-  <div id="filters">
-    <button class="filter-btn active" onclick="filterCity('all')">All</button>
+  <div id="filter-bar-wrapper">
+    <button id="map-filter-btn" onclick="toggleMapFilter()" title="Filter by category">🔍</button>
+    <div id="filters">
+      <button class="filter-btn active" onclick="filterCity('all')">All</button>
+    </div>
+  </div>
+  <!-- Map category filter panel -->
+  <div id="map-filter-panel">
+    <div id="mf-parent-row"></div>
+    <div id="mf-sub-section">
+      <div class="mf-sub-label">↳ Filter by type</div>
+      <div id="mf-sub-row"></div>
+    </div>
   </div>
   <div id="map"></div>
   <button class="fab" id="locate-btn" onclick="locateMe()" title="My location">📍</button>
@@ -7314,6 +7398,9 @@
   let map, infoWindow, markers = [];
   const markerByName = {};   // name → marker, for list-view "show on map"
 
+  // Map filter state
+  let mapFilterParent = 'all', mapFilterSub = 'all';
+
   function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
       zoom: 6,
@@ -7361,6 +7448,9 @@
       markers.push(marker);
       markerByName[p.name] = marker;
     });
+
+    // Build map category filter panel
+    _buildMapFilterChips();
 
     // Map city filter buttons
     const bar = document.getElementById('filters');
@@ -7735,14 +7825,108 @@
     return h;
   }
 
+  // ── Map filter panel ──────────────────────────────────────────────────────
+  function toggleMapFilter() {
+    const panel = document.getElementById('map-filter-panel');
+    const btn   = document.getElementById('map-filter-btn');
+    const open  = panel.classList.toggle('open');
+    btn.classList.toggle('active', open);
+  }
+
+  function _buildMapFilterChips() {
+    const parentRow = document.getElementById('mf-parent-row');
+    parentRow.innerHTML = '';
+
+    // "All" chip
+    const allChip = document.createElement('button');
+    allChip.className = 'lv-chip active';
+    allChip.textContent = 'All';
+    allChip.dataset.val = 'all';
+    allChip.onclick = () => _setMapParent('all');
+    parentRow.appendChild(allChip);
+
+    Object.keys(PARENT_GROUPS).forEach(parent => {
+      if (!PLACES.some(p => placeMatchesParent(p, parent))) return;
+      const chip = document.createElement('button');
+      chip.className = 'lv-chip';
+      chip.textContent = parent;
+      chip.dataset.val = parent;
+      chip.onclick = () => _setMapParent(parent);
+      parentRow.appendChild(chip);
+    });
+  }
+
+  function _setMapParent(parent) {
+    mapFilterParent = parent;
+    mapFilterSub    = 'all';
+
+    document.querySelectorAll('#mf-parent-row .lv-chip').forEach(c =>
+      c.classList.toggle('active', c.dataset.val === parent));
+
+    const subSection = document.getElementById('mf-sub-section');
+    const subRow     = document.getElementById('mf-sub-row');
+    subRow.innerHTML = '';
+
+    if (parent === 'all') {
+      subSection.classList.remove('visible');
+    } else {
+      const subs = [...new Set(
+        PLACES.filter(p => placeMatchesParent(p, parent) && p.subcategory).map(p => p.subcategory)
+      )].sort();
+
+      if (subs.length === 0) {
+        subSection.classList.remove('visible');
+      } else {
+        subSection.classList.add('visible');
+        const allSub = document.createElement('button');
+        allSub.className = 'lv-chip active';
+        allSub.textContent = 'All';
+        allSub.dataset.val = 'all';
+        allSub.onclick = () => _setMapSub('all');
+        subRow.appendChild(allSub);
+        subs.forEach(sub => {
+          const chip = document.createElement('button');
+          chip.className = 'lv-chip';
+          chip.textContent = sub;
+          chip.dataset.val = sub;
+          chip.onclick = () => _setMapSub(sub);
+          subRow.appendChild(chip);
+        });
+      }
+    }
+    _applyMapFilter();
+  }
+
+  function _setMapSub(sub) {
+    mapFilterSub = sub;
+    document.querySelectorAll('#mf-sub-row .lv-chip').forEach(c =>
+      c.classList.toggle('active', c.dataset.val === sub));
+    _applyMapFilter();
+  }
+
+  function _applyMapFilter() {
+    // Get the active city from the city filter bar
+    const activeCityBtn = document.querySelector('.filter-btn.active');
+    const activeCity = activeCityBtn ? activeCityBtn.textContent : 'All';
+
+    markers.forEach(m => {
+      const p = PLACES.find(pl => pl.name === m.title);
+      if (!p) { m.setVisible(false); return; }
+      const cityOk   = activeCity === 'All' || m._city === activeCity;
+      const parentOk = mapFilterParent === 'all' || placeMatchesParent(p, mapFilterParent);
+      const subOk    = mapFilterSub === 'all' || p.subcategory === mapFilterSub;
+      m.setVisible(cityOk && parentOk && subOk);
+    });
+    infoWindow.close();
+    fitVisible();
+  }
+
   function filterCity(city) {
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.classList.toggle('active',
         btn.textContent === city || (city === 'all' && btn.textContent === 'All'));
     });
-    markers.forEach(m => m.setVisible(city === 'all' || m._city === city));
-    infoWindow.close();
-    fitVisible();
+    _applyMapFilter();
   }
 
   function fitVisible() {
