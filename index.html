@@ -7531,128 +7531,213 @@
     fitVisible();
   }
 
-  // ── Parent category map (module-scope so all functions can access) ────────
+  // ── Parent category map ───────────────────────────────────────────────────
+  // 🛁 Relax has no dedicated Type — it is routed via subcategory in _getParentGroup.
   const PARENT_GROUPS = {
-    '🍜 Food':    ['Restaurant', 'Cafe', 'Bar'],
-    '🛍️ Shop':    ['Shop', 'Market'],
-    '🗺️ Explore': ['Attraction', 'Neighborhood', 'Service', 'Hotel', 'Other'],
+    '🍜 Eat & Drink': ['Restaurant', 'Cafe', 'Bar'],
+    '🛍️ Shop':        ['Shop', 'Market'],
+    '🗺️ Explore':     ['Attraction', 'Neighborhood'],
+    '🛁 Relax':       [],   // routed by subcategory, not Type
+    '🛏️ Stay':        ['Hotel'],
+    '⚙️ Practical':   ['Service', 'Other'],
   };
-  const ALL_KNOWN_TYPES = new Set(Object.values(PARENT_GROUPS).flat());
 
   // ── Valid subcategories per parent (controlled vocabulary) ──────────────
   const VALID_SUBS = {
-    '🍜 Food':    ['Sushi / Omakase', 'Ramen', 'Izakaya', 'Tempura / Tonkatsu',
-                   'Yakiniku / BBQ', 'Udon / Soba', 'Curry', 'Seafood',
-                   'Cafe / Coffee', 'Dessert / Sweets', 'Bakery', 'Street Food',
-                   'Burger / Western', 'Other Food'],
-    '🛍️ Shop':    ['Clothing', 'Thrift / Vintage', 'Ceramics / Pottery',
-                   'Homegoods / Interior', 'Books / Music', 'Beauty / Cosmetics',
-                   'Souvenirs', 'Electronics', 'Department Store', 'Other Shop'],
-    '🗺️ Explore': ['Temple / Shrine', 'Museum / Gallery', 'Park / Nature',
-                   'Onsen / Spa', 'Market', 'Scenic / Viewpoint', 'Entertainment',
-                   'Convenience Store', 'Other'],
+    '🍜 Eat & Drink': ['Ramen', 'Sushi / Omakase', 'Izakaya', 'Yakitori', 'Tempura',
+                       'Tonkatsu', 'Udon / Soba', 'Cafe', 'Coffee Roaster',
+                       'Dessert / Sweets', 'Cocktail Bar', 'Wine Bar', 'Bakery',
+                       'Street Food', 'Fine Dining', 'Other Food'],
+    '🛍️ Shop':        ['Vintage / Thrift', 'Designer / Luxury', 'Japanese Streetwear',
+                       'Denim', 'Souvenirs', 'Stationery', 'Ceramics', 'Knife Shop',
+                       'Bookstore', 'Record Store', 'Market', 'Department Store',
+                       'Specialty Food Shop', 'Other Shop'],
+    '🗺️ Explore':     ['Shrine / Temple', 'Museum', 'Architecture', 'Scenic Viewpoint',
+                       'Park / Garden', 'Neighborhood', 'Historic Site', 'Pop Culture',
+                       'Art Gallery', 'Landmark', 'Street / Alley', 'Other Explore'],
+    '🛁 Relax':       ['Onsen', 'Public Bath', 'Spa', 'Scenic Cafe', 'Nature Retreat'],
+    '🛏️ Stay':        ['Ryokan', 'Luxury Hotel', 'Boutique Hotel', 'Business Hotel',
+                       'Unique Stay'],
+    '⚙️ Practical':   ['Train Station', 'Airport', 'Luggage Service', 'SIM / Tech',
+                       'Pharmacy', 'Convenience Store'],
   };
   const ALL_VALID_SUBS = new Set(Object.values(VALID_SUBS).flat());
 
+  // Subcategories that trigger 🛁 Relax parent group regardless of Type
+  const RELAX_SUBS = new Set(VALID_SUBS['🛁 Relax']);
+
   // ── Subcategory normalization map ───────────────────────────────────────
-  // Maps commonly occurring non-standard subcategory values → standard labels.
-  // Add entries here as new non-standard values are discovered.
+  // Old controlled-vocab values + common LLM variants → new canonical labels.
+  // Add entries here whenever console.log reports an unmapped subcategory.
   const SUB_NORMALIZE = {
-    // Clothing variants
-    'Fashion':                       'Clothing',
-    'Fashion / Japanese Streetwear': 'Clothing',
-    'Japanese Streetwear':           'Clothing',
-    'Streetwear':                    'Clothing',
-    'Apparel':                       'Clothing',
-    'Shoes':                         'Clothing',
-    'Footwear':                      'Clothing',
-    'Accessories':                   'Clothing',
-    'Jewelry':                       'Clothing',
-    // Thrift / Vintage variants
-    'Vintage':                       'Thrift / Vintage',
-    'Vintage Clothing':              'Thrift / Vintage',
-    'Thrift':                        'Thrift / Vintage',
-    'Second Hand':                   'Thrift / Vintage',
-    // Food variants
+    // ── 🍜 Eat & Drink ───────────────────────────────────────────────────
     'Sushi':                         'Sushi / Omakase',
     'Omakase':                       'Sushi / Omakase',
-    'Coffee':                        'Cafe / Coffee',
-    'Cafe':                          'Cafe / Coffee',
-    'Coffee Shop':                   'Cafe / Coffee',
-    'Tea':                           'Cafe / Coffee',
+    'Ramen':                         'Ramen',
+    'Izakaya':                       'Izakaya',
+    'Yakitori':                      'Yakitori',
+    'Tempura':                       'Tempura',
+    'Tonkatsu':                      'Tonkatsu',
+    'Tempura / Tonkatsu':            'Tempura',   // old combined label → split to Tempura
+    'Udon':                          'Udon / Soba',
+    'Soba':                          'Udon / Soba',
+    'Coffee':                        'Cafe',
+    'Coffee Shop':                   'Cafe',
+    'Cafe / Coffee':                 'Cafe',      // old combined label
+    'Tea':                           'Cafe',
+    'Matcha':                        'Dessert / Sweets',
     'Dessert':                       'Dessert / Sweets',
     'Sweets':                        'Dessert / Sweets',
     'Ice Cream':                     'Dessert / Sweets',
-    'Matcha':                        'Dessert / Sweets',
-    'Tempura':                       'Tempura / Tonkatsu',
-    'Tonkatsu':                      'Tempura / Tonkatsu',
-    'Yakiniku':                      'Yakiniku / BBQ',
-    'BBQ':                           'Yakiniku / BBQ',
-    'Udon':                          'Udon / Soba',
-    'Soba':                          'Udon / Soba',
-    'Burger':                        'Burger / Western',
-    'Western':                       'Burger / Western',
-    'Pizza':                         'Burger / Western',
-    'Pasta':                         'Burger / Western',
-    // Explore variants
-    'Temple':                        'Temple / Shrine',
-    'Shrine':                        'Temple / Shrine',
-    'Museum':                        'Museum / Gallery',
-    'Gallery':                       'Museum / Gallery',
-    'Art Gallery':                   'Museum / Gallery',
-    'Park':                          'Park / Nature',
-    'Nature':                        'Park / Nature',
-    'Garden':                        'Park / Nature',
-    'Onsen':                         'Onsen / Spa',
-    'Spa':                           'Onsen / Spa',
-    'Scenic':                        'Scenic / Viewpoint',
-    'Viewpoint':                     'Scenic / Viewpoint',
-    'Lookout':                       'Scenic / Viewpoint',
-    // Shop misc
-    'Ceramics':                      'Ceramics / Pottery',
-    'Pottery':                       'Ceramics / Pottery',
-    'Homegoods':                     'Homegoods / Interior',
-    'Interior':                      'Homegoods / Interior',
-    'Home Goods':                    'Homegoods / Interior',
-    'Furniture':                     'Homegoods / Interior',
-    'Books':                         'Books / Music',
-    'Music':                         'Books / Music',
-    'Record Store':                  'Books / Music',
-    'Bookstore':                     'Books / Music',
-    'Beauty':                        'Beauty / Cosmetics',
-    'Cosmetics':                     'Beauty / Cosmetics',
-    'Skincare':                      'Beauty / Cosmetics',
-    'Drugstore':                     'Beauty / Cosmetics',
+    'Bar':                           'Cocktail Bar',
+    'Cocktail':                      'Cocktail Bar',
+    'Wine':                          'Wine Bar',
+    'Bakery':                        'Bakery',
+    'Street Food':                   'Street Food',
+    'Yakiniku':                      'Other Food',
+    'Yakiniku / BBQ':                'Other Food',   // old label
+    'BBQ':                           'Other Food',
+    'Curry':                         'Other Food',
+    'Seafood':                       'Other Food',
+    'Burger':                        'Other Food',
+    'Burger / Western':              'Other Food',   // old label
+    'Western':                       'Other Food',
+    'Pizza':                         'Other Food',
+    'Pasta':                         'Other Food',
+    'Fine Dining':                   'Fine Dining',
+    'Other Food':                    'Other Food',
+
+    // ── 🛍️ Shop ──────────────────────────────────────────────────────────
+    'Vintage':                       'Vintage / Thrift',
+    'Vintage Clothing':              'Vintage / Thrift',
+    'Thrift':                        'Vintage / Thrift',
+    'Thrift / Vintage':              'Vintage / Thrift',  // old label
+    'Second Hand':                   'Vintage / Thrift',
+    'Fashion':                       'Japanese Streetwear',
+    'Fashion / Japanese Streetwear': 'Japanese Streetwear',
+    'Streetwear':                    'Japanese Streetwear',
+    'Apparel':                       'Japanese Streetwear',
+    'Clothing':                      'Other Shop',    // too generic without context
+    'Shoes':                         'Other Shop',
+    'Footwear':                      'Other Shop',
+    'Accessories':                   'Other Shop',
+    'Jewelry':                       'Other Shop',
+    'Denim':                         'Denim',
+    'Souvenirs':                     'Souvenirs',
+    'Stationery':                    'Stationery',
+    'Ceramics':                      'Ceramics',
+    'Ceramics / Pottery':            'Ceramics',     // old label
+    'Pottery':                       'Ceramics',
+    'Knife Shop':                    'Knife Shop',
+    'Books':                         'Bookstore',
+    'Bookstore':                     'Bookstore',
+    'Books / Music':                 'Bookstore',    // old label
+    'Record Store':                  'Record Store',
+    'Music':                         'Record Store',
+    'Market':                        'Market',
+    'Department Store':              'Department Store',
+    'Specialty Food Shop':           'Specialty Food Shop',
+    'Homegoods / Interior':          'Other Shop',   // old label
+    'Homegoods':                     'Other Shop',
+    'Home Goods':                    'Other Shop',
+    'Interior':                      'Other Shop',
+    'Furniture':                     'Other Shop',
+    'Beauty / Cosmetics':            'Other Shop',   // old label
+    'Beauty':                        'Other Shop',
+    'Cosmetics':                     'Other Shop',
+    'Skincare':                      'Other Shop',
+    'Electronics':                   'Other Shop',
+    'Other Shop':                    'Other Shop',
+
+    // ── 🗺️ Explore ───────────────────────────────────────────────────────
+    'Temple':                        'Shrine / Temple',
+    'Shrine':                        'Shrine / Temple',
+    'Temple / Shrine':               'Shrine / Temple',  // old label
+    'Museum':                        'Museum',
+    'Gallery':                       'Art Gallery',
+    'Art Gallery':                   'Art Gallery',
+    'Museum / Gallery':              'Museum',       // old label
+    'Architecture':                  'Architecture',
+    'Scenic':                        'Scenic Viewpoint',
+    'Viewpoint':                     'Scenic Viewpoint',
+    'Lookout':                       'Scenic Viewpoint',
+    'Scenic / Viewpoint':            'Scenic Viewpoint',  // old label
+    'Park':                          'Park / Garden',
+    'Garden':                        'Park / Garden',
+    'Nature':                        'Park / Garden',
+    'Park / Nature':                 'Park / Garden',  // old label
+    'Neighborhood':                  'Neighborhood',
+    'Historic Site':                 'Historic Site',
+    'Entertainment':                 'Pop Culture',   // old label
+    'Pop Culture':                   'Pop Culture',
+    'Landmark':                      'Landmark',
+    'Street / Alley':                'Street / Alley',
+    'Other':                         'Other Explore',  // old generic label
+    'Other Explore':                 'Other Explore',
+
+    // ── 🛁 Relax ─────────────────────────────────────────────────────────
+    'Onsen':                         'Onsen',
+    'Onsen / Spa':                   'Onsen',         // old label
+    'Public Bath':                   'Public Bath',
+    'Spa':                           'Spa',
+    'Scenic Cafe':                   'Scenic Cafe',
+    'Nature Retreat':                'Nature Retreat',
+
+    // ── 🛏️ Stay ──────────────────────────────────────────────────────────
+    'Ryokan':                        'Ryokan',
+    'Luxury Hotel':                  'Luxury Hotel',
+    'Boutique Hotel':                'Boutique Hotel',
+    'Business Hotel':                'Business Hotel',
+    'Unique Stay':                   'Unique Stay',
+    'Hotel':                         'Business Hotel',   // generic fallback
+
+    // ── ⚙️ Practical ─────────────────────────────────────────────────────
+    'Train Station':                 'Train Station',
+    'Airport':                       'Airport',
+    'Luggage Service':               'Luggage Service',
+    'SIM / Tech':                    'SIM / Tech',
+    'Pharmacy':                      'Pharmacy',
+    'Drugstore':                     'Pharmacy',
+    'Convenience Store':             'Convenience Store',
   };
 
   // ── Assign parent group + normalize subcategory on every place at load ──
-  function _getParentGroup(type) {
-    for (const [parent, types] of Object.entries(PARENT_GROUPS)) {
-      if (types.includes(type)) return parent;
-    }
-    return '🗺️ Explore';  // unrecognised types default to Explore
+  // _getParentGroup checks the raw subcategory FIRST for Relax routing,
+  // since Onsen/Spa places are currently typed as Attraction or Service.
+  function _getParentGroup(type, rawSub) {
+    if (RELAX_SUBS.has(rawSub))               return '🛁 Relax';
+    if (['Restaurant','Cafe','Bar'].includes(type))          return '🍜 Eat & Drink';
+    if (['Shop','Market'].includes(type))                    return '🛍️ Shop';
+    if (['Attraction','Neighborhood'].includes(type))        return '🗺️ Explore';
+    if (type === 'Hotel')                                    return '🛏️ Stay';
+    if (['Service','Other'].includes(type))                  return '⚙️ Practical';
+    return '🗺️ Explore';  // unknown types default to Explore
   }
 
   function _defaultSub(parentGroup) {
-    if (parentGroup === '🍜 Food')    return 'Other Food';
-    if (parentGroup === '🛍️ Shop')    return 'Other Shop';
-    return 'Other';
+    if (parentGroup === '🍜 Eat & Drink') return 'Other Food';
+    if (parentGroup === '🛍️ Shop')        return 'Other Shop';
+    if (parentGroup === '🗺️ Explore')     return 'Other Explore';
+    if (parentGroup === '🛁 Relax')       return 'Onsen';
+    if (parentGroup === '🛏️ Stay')        return 'Unique Stay';
+    if (parentGroup === '⚙️ Practical')   return 'Convenience Store';
+    return 'Other Explore';
   }
 
   PLACES.forEach(p => {
-    // 1. Assign deterministic parent group
-    p._parentGroup = _getParentGroup(p.type);
-
-    // 2. Compute _parentSub — the standard label this specific subcategory rolls up into.
-    //    The ORIGINAL p.subcategory is NEVER overwritten, so the specific label is kept for display.
     const rawSub = (p.subcategory || '').trim();
+
+    // 1. Assign deterministic parent group (uses rawSub for Relax routing)
+    p._parentGroup = _getParentGroup(p.type, rawSub);
+
+    // 2. Compute _parentSub — the standard label this specific value rolls up into.
+    //    The ORIGINAL p.subcategory is NEVER overwritten; the specific label is preserved.
     let parentSub = rawSub;
 
-    // Direct normalization map
     if (SUB_NORMALIZE[rawSub]) {
       parentSub = SUB_NORMALIZE[rawSub];
     } else if (rawSub && !ALL_VALID_SUBS.has(rawSub)) {
-      // Case-insensitive partial match against valid subs for this parent group
+      // Case-insensitive partial match within this parent's valid subs
       const lower = rawSub.toLowerCase();
       const validForParent = VALID_SUBS[p._parentGroup] || [];
       const match = validForParent.find(v =>
@@ -7661,20 +7746,19 @@
       if (match) {
         parentSub = match;
       } else {
-        // Unrecognised — log it so the normalize map can be extended
-        console.log('Unmapped subcategory:', rawSub, 'for', p.name, '→ defaulting to', _defaultSub(p._parentGroup));
+        console.log('Unmapped subcategory:', rawSub, 'for', p.name, '(', p.type, ') → defaulting to', _defaultSub(p._parentGroup));
         parentSub = _defaultSub(p._parentGroup);
       }
     }
 
-    // 3. If subcategory was empty, default both to the parent's "Other" bucket
+    // 3. Empty subcategory → default to parent's Other bucket
     if (!rawSub) {
       p.subcategory = _defaultSub(p._parentGroup);
       parentSub     = p.subcategory;
     }
 
-    // _parentSub is the standard/broad label; used for alias-based filtering.
-    // When _parentSub === p.subcategory the place is already on a standard label.
+    // _parentSub is the broad/standard label for alias filtering.
+    // matchesSub() checks both p.subcategory (specific) and p._parentSub (broad).
     p._parentSub = parentSub;
   });
 
