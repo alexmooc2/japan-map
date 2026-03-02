@@ -13557,6 +13557,9 @@
   // Map filter state
   let mapFilterCity = 'all', mapFilterParent = 'all', mapFilterSub = 'all';
 
+  // Clothing-related subcategories (routed to 👗 Clothing parent by subcategory)
+  const CLOTHING_SUBS = new Set(['Vintage / Thrift', 'Designer / Luxury', 'Japanese Streetwear', 'Denim', 'Clothing']);
+
   function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
       zoom: 6,
@@ -13670,7 +13673,9 @@
   // ── Parent category map ───────────────────────────────────────────────────
   // 🛁 Relax has no dedicated Type — it is routed via subcategory in _getParentGroup.
   const PARENT_GROUPS = {
-    '🍜 Eat & Drink': ['Restaurant', 'Cafe', 'Bar'],
+    '🍜 Food':         ['Restaurant'],
+    '☕ Cafe':         ['Cafe'],
+    '🍸 Bar & Drinks': ['Bar'],
     '🛍️ Shop':        ['Shop', 'Market'],
     '🗺️ Explore':     ['Attraction', 'Neighborhood'],
     '🛁 Relax':       [],   // routed by subcategory, not Type
@@ -13680,14 +13685,16 @@
 
   // ── Valid subcategories per parent (controlled vocabulary) ──────────────
   const VALID_SUBS = {
-    '🍜 Eat & Drink': ['Ramen', 'Sushi / Omakase', 'Izakaya', 'Yakitori', 'Tempura',
-                       'Tonkatsu', 'Okonomiyaki', 'Udon / Soba', 'Cafe', 'Coffee Roaster',
-                       'Dessert / Sweets', 'Cocktail Bar', 'Wine Bar', 'Bakery',
-                       'Street Food', 'Fine Dining', 'Other Food'],
-    '🛍️ Shop':        ['Vintage / Thrift', 'Designer / Luxury', 'Japanese Streetwear',
-                       'Denim', 'Clothing', 'Beauty / Cosmetics', 'Toys / Games', 'Home & Interior',
-                       'Souvenirs', 'Stationery', 'Ceramics', 'Knife Shop', 'Bookstore',
-                       'Record Store', 'Market', 'Department Store', 'Specialty Food Shop', 'Other Shop'],
+    '🍜 Food':         ['Ramen', 'Sushi / Omakase', 'Izakaya', 'Yakitori', 'Tempura',
+                        'Tonkatsu', 'Okonomiyaki', 'Udon / Soba', 'Dessert / Sweets',
+                        'Bakery', 'Street Food', 'Fine Dining', 'Other Food'],
+    '☕ Cafe':         ['Cafe', 'Coffee Roaster', 'Dessert / Sweets', 'Other Cafe'],
+    '🍸 Bar & Drinks': ['Cocktail Bar', 'Wine Bar', 'Other Bar'],
+    '👗 Clothing':     ['Vintage / Thrift', 'Designer / Luxury', 'Japanese Streetwear',
+                        'Denim', 'Clothing'],
+    '🛍️ Shop':        ['Beauty / Cosmetics', 'Toys / Games', 'Home & Interior',
+                        'Souvenirs', 'Stationery', 'Ceramics', 'Knife Shop', 'Bookstore',
+                        'Record Store', 'Market', 'Department Store', 'Specialty Food Shop', 'Other Shop'],
     '🗺️ Explore':     ['Shrine / Temple', 'Museum', 'Architecture', 'Scenic Viewpoint',
                        'Park / Garden', 'Neighborhood', 'Historic Site', 'Pop Culture',
                        'Art Gallery', 'Landmark', 'Street / Alley', 'Other Explore'],
@@ -13849,8 +13856,14 @@
   // _getParentGroup checks the raw subcategory FIRST for Relax routing,
   // since Onsen/Spa places are currently typed as Attraction or Service.
   function _getParentGroup(type, rawSub) {
-    if (RELAX_SUBS.has(rawSub))               return '🛁 Relax';
-    if (['Restaurant','Cafe','Bar'].includes(type))          return '🍜 Eat & Drink';
+    // Check subcategory-based routing first (highest priority)
+    if (RELAX_SUBS.has(rawSub))                              return '🛁 Relax';
+    if (CLOTHING_SUBS.has(rawSub))                           return '👗 Clothing';
+
+    // Then check Type-based routing
+    if (type === 'Restaurant')                               return '🍜 Food';
+    if (type === 'Cafe')                                     return '☕ Cafe';
+    if (type === 'Bar')                                      return '🍸 Bar & Drinks';
     if (['Shop','Market'].includes(type))                    return '🛍️ Shop';
     if (['Attraction','Neighborhood'].includes(type))        return '🗺️ Explore';
     if (type === 'Hotel')                                    return '🛏️ Stay';
@@ -13859,7 +13872,10 @@
   }
 
   function _defaultSub(parentGroup) {
-    if (parentGroup === '🍜 Eat & Drink') return 'Other Food';
+    if (parentGroup === '🍜 Food')         return 'Other Food';
+    if (parentGroup === '☕ Cafe')         return 'Cafe';
+    if (parentGroup === '🍸 Bar & Drinks') return 'Cocktail Bar';
+    if (parentGroup === '👗 Clothing')     return 'Clothing';
     if (parentGroup === '🛍️ Shop')        return 'Other Shop';
     if (parentGroup === '🗺️ Explore')     return 'Other Explore';
     if (parentGroup === '🛁 Relax')       return 'Onsen';
