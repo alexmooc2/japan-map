@@ -21114,7 +21114,6 @@
 
       const marker = new google.maps.Marker({
         position: { lat: p.lat, lng: p.lng },
-        map,
         title: p.name,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
@@ -21125,6 +21124,7 @@
           strokeWeight: 2.5,
         },
       });
+      // NOTE: no `map` here — clusterer owns map placement
 
       marker._city = p.city;
       marker._type = p.type;
@@ -21136,13 +21136,15 @@
       markerByName[p.name] = marker;
     });
 
-    // ── Marker Clustering DISABLED ──
-    // Note: with 933 pins, clustering provides visual benefit but hides individual locations.
-    // Performance is handled by: O(1) filter lookups (placeByName) + debounced filter events.
-    // If you want clustering back: uncomment below and adjust maxZoom/gridSize as needed.
-    // clusterer = new markerClusterer.MarkerClusterer({ map, markers, maxZoom: 13, gridSize: 40 });
-    // For now, create a no-op clusterer (filters still work, just no visual clustering):
-    clusterer = { clearMarkers: () => {}, addMarkers: () => {} };
+    // ── Marker Clustering ──────────────────────────────────────────────────────
+    // SuperClusterAlgorithm: maxZoom controls the zoom level at which clustering STOPS.
+    // At map zoom > maxZoom, every pin is always shown individually.
+    // maxZoom: 10 → clusters only when viewing all-of-Japan; city views (zoom 11+) show all pins.
+    clusterer = new markerClusterer.MarkerClusterer({
+      map,
+      markers,
+      algorithm: new markerClusterer.SuperClusterAlgorithm({ maxZoom: 10, radius: 80 }),
+    });
     _visibleMarkers = [...markers];
 
     // Build map category filter panel
@@ -21940,8 +21942,10 @@
       const subOk    = matchesSub(p, mapFilterSub);
       return cityOk && parentOk && subOk;
     });
-    clusterer.clearMarkers();
-    clusterer.addMarkers(_visibleMarkers);
+    // Batch update clusterer: clear all, add only visible, single render pass
+    clusterer.clearMarkers(true);
+    clusterer.addMarkers(_visibleMarkers, true);
+    clusterer.render();
     infoWindow.close();
     fitVisible();
   }
