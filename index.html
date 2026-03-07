@@ -21075,8 +21075,11 @@
     'Other':       '📌',
   };
 
-  let map, infoWindow, markers = [];
+  let map, infoWindow, markers = [], clusterer;
   const markerByName = {};   // name → marker, for list-view "show on map"
+  const placeByName  = {};   // name → place data, O(1) filter lookups
+  let _filterTimer = null;     // debounce handle for filter updates
+  let _visibleMarkers = [];    // currently visible markers after filtering
 
   // Map filter state
   let mapFilterCity = 'all', mapFilterParent = 'all', mapFilterSub = 'all';
@@ -21107,10 +21110,10 @@
       if (!p.lat || !p.lng) return;
       if (p.city) cities.add(p.city);
       if (p.type) types.add(p.type);
+      placeByName[p.name] = p;
 
       const marker = new google.maps.Marker({
         position: { lat: p.lat, lng: p.lng },
-        map,
         title: p.name,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
@@ -21131,6 +21134,10 @@
       markers.push(marker);
       markerByName[p.name] = marker;
     });
+
+    // ── Marker Clustering: group nearby pins at low zoom (186 → ~10 clusters when zoomed out) ──
+    clusterer = new markerClusterer.MarkerClusterer({ map, markers });
+    _visibleMarkers = [...markers];
 
     // Build map category filter panel
     _buildMapFilterChips();
@@ -21908,28 +21915,34 @@
         }
       }
     }
-    _applyMapFilter();
+    scheduleApplyFilter();
   }
 
   function _setMapSub(sub) {
     mapFilterSub = sub;
     document.querySelectorAll('#mf-sub-row .lv-chip').forEach(c =>
       c.classList.toggle('active', c.dataset.val === sub));
-    _applyMapFilter();
+    scheduleApplyFilter();
   }
 
   function _applyMapFilter() {
-    // Use state variables (not DOM) for consistent filtering across map and list
-    markers.forEach(m => {
-      const p = PLACES.find(pl => pl.name === m.title);
-      if (!p) { m.setVisible(false); return; }
-      const cityOk   = mapFilterCity === 'all' || m._city === mapFilterCity;
+    _visibleMarkers = markers.filter(m => {
+      const p = placeByName[m.title];
+      if (!p) return false;
+      const cityOk   = mapFilterCity   === 'all' || p.city === mapFilterCity;
       const parentOk = mapFilterParent === 'all' || placeMatchesParent(p, mapFilterParent);
       const subOk    = matchesSub(p, mapFilterSub);
-      m.setVisible(cityOk && parentOk && subOk);
+      return cityOk && parentOk && subOk;
     });
+    clusterer.clearMarkers();
+    clusterer.addMarkers(_visibleMarkers);
     infoWindow.close();
     fitVisible();
+  }
+
+  function scheduleApplyFilter() {
+    clearTimeout(_filterTimer);
+    _filterTimer = setTimeout(_applyMapFilter, 80);
   }
 
   function filterCity(city) {
@@ -21950,10 +21963,10 @@
   }
 
   function fitVisible() {
+    if (_visibleMarkers.length === 0) return;
     const bounds = new google.maps.LatLngBounds();
-    let n = 0;
-    markers.forEach(m => { if (m.getVisible()) { bounds.extend(m.getPosition()); n++; } });
-    if (n > 0) map.fitBounds(bounds, { top: 60, bottom: 80, left: 20, right: 20 });
+    _visibleMarkers.forEach(m => bounds.extend(m.getPosition()));
+    map.fitBounds(bounds, { top: 60, bottom: 80, left: 20, right: 20 });
   }
 
   function locateMe() {
@@ -21979,6 +21992,7 @@
   }
   </script>
 
+  <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
   <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxalv-tE2G_coEPcLLCiD6S4I9A7b_RSc&callback=initMap&loading=async"
     async defer>
