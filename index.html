@@ -21135,9 +21135,9 @@
       markerByName[p.name] = marker;
     });
 
-    // ── Marker Clustering: only cluster at very high zoom-outs (all of Japan view) ──
-    // maxZoom: 12 = show individual pins when viewing a city or region; cluster only at zoom 11 and below
-    clusterer = new markerClusterer.MarkerClusterer({ map, markers, maxZoom: 12 });
+    // ── Marker Clustering: minimize clustering to show individual pins sooner ──
+    // maxZoom: 14 = show individual pins at region/city level; cluster only at extreme zoom-outs
+    clusterer = new markerClusterer.MarkerClusterer({ map, markers, maxZoom: 14 });
     _visibleMarkers = [...markers];
 
     // Build map category filter panel
