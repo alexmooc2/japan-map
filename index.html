@@ -21135,9 +21135,14 @@
       markerByName[p.name] = marker;
     });
 
-    // ── Marker Clustering: minimize clustering to show individual pins sooner ──
-    // maxZoom: 14 = show individual pins at region/city level; cluster only at extreme zoom-outs
-    clusterer = new markerClusterer.MarkerClusterer({ map, markers, maxZoom: 14 });
+    // ── Marker Clustering: aggressive settings to minimize grouping ──
+    // maxZoom: 15 = show individual pins almost always; gridSize: 60 = only cluster very close pins
+    clusterer = new markerClusterer.MarkerClusterer({
+      map,
+      markers,
+      maxZoom: 15,
+      gridSize: 60  // smaller = less aggressive clustering (default is 40)
+    });
     _visibleMarkers = [...markers];
 
     // Build map category filter panel
