@@ -21135,14 +21135,13 @@
       markerByName[p.name] = marker;
     });
 
-    // ── Marker Clustering: aggressive settings to minimize grouping ──
-    // maxZoom: 15 = show individual pins almost always; gridSize: 60 = only cluster very close pins
-    clusterer = new markerClusterer.MarkerClusterer({
-      map,
-      markers,
-      maxZoom: 15,
-      gridSize: 60  // smaller = less aggressive clustering (default is 40)
-    });
+    // ── Marker Clustering DISABLED ──
+    // Note: with 933 pins, clustering provides visual benefit but hides individual locations.
+    // Performance is handled by: O(1) filter lookups (placeByName) + debounced filter events.
+    // If you want clustering back: uncomment below and adjust maxZoom/gridSize as needed.
+    // clusterer = new markerClusterer.MarkerClusterer({ map, markers, maxZoom: 13, gridSize: 40 });
+    // For now, create a no-op clusterer (filters still work, just no visual clustering):
+    clusterer = { clearMarkers: () => {}, addMarkers: () => {} };
     _visibleMarkers = [...markers];
 
     // Build map category filter panel
